@@ -1,0 +1,42 @@
+{
+    "model": "Crazyflie Bolt",
+    "manufacturer": "Bitcraze",
+    "type": "Flight Controller / Autonomy Platform",
+    "power_input_range": {
+        "cell_count_lipo": "1S - 4S",
+        "voltage_v": "3.0V - 17.0V"
+    },
+    "esc_interface": {
+        "protocols_supported": [
+            "PWM (Default 400Hz)",
+            "OneShot125"
+        ],
+        "physical_connection": "4 x JST-PH ESC connectors",
+        "max_onboard_current_per_motor_a": 8.0,
+        "esc_rating_recommendation": "Can be rated higher than 8A; if exceeding 8A current draw through the onboard PDB, bypass by connecting only ESC signal wires and routing power externally."
+    },
+    "weight_g": {
+        "pcba_only": 7.3,
+        "with_battery_cable": 9.2
+    },
+    "communication": {
+        "wireless": [
+            "2.4GHz ISM band radio (via nRF51822) with 20 dBm radio amplifier",
+            "Bluetooth Low Energy (BLE) support for iOS/Android clients"
+        ],
+        "wired_onboard": [
+            "1 x Full speed micro-USB device interface",
+            "I2C (400kHz)",
+            "SPI",
+            "2 x UART"
+        ],
+        "expansion": "2 x Crazyflie expansion connectors (Decks compatible)"
+    },
+    "core_hardware": {
+        "main_mcu": "STM32F405 (Cortex-M4, 168MHz, 192kb SRAM, 1Mb flash)",
+        "radio_power_mcu": "nRF51822 (Cortex-M0, 32Mhz, 16kb SRAM, 128kb flash)",
+        "imu": "BMI088 3-axis gyro & accelerometer (via SPI)",
+        "barometer": "BMP388 high precision pressure sensor"
+    },
+    "url": "https://www.bitcraze.io/products/crazyflie-bolt/"
+}

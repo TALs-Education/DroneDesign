@@ -1,0 +1,30 @@
+{
+    "model": "XSD 7A Solder Version",
+    "manufacturer": "DYS (DongYang)",
+    "type": "Micro Electronic Speed Controller (ESC)",
+    "firmware": "BLHeli_S (EFM8BB21 50MHz MCU)",
+    "protocols_supported": [
+        "Dshot600",
+        "Dshot300",
+        "Multishot",
+        "Oneshot42",
+        "Oneshot125"
+    ],
+    "power_input_range": {
+        "cell_count_lipo": "1S - 2S",
+        "voltage_v": "3.0V - 8.4V"
+    },
+    "current_ratings": {
+        "continuous_a": 7.0,
+        "peak_burst_a": 9.0,
+        "burst_duration_s": 10.0
+    },
+    "bec": "None (OPTO / No BEC Onboard)",
+    "dimensions_mm": {
+        "length": 16.2,
+        "width": 11.0,
+        "height": 4.0
+    },
+    "weight_g": 0.83,
+    "url": "https://www.dys.hk/product/XSD%207A.html"
+}

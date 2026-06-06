@@ -1,0 +1,28 @@
+{
+    "model": "Flow Deck v2",
+    "manufacturer": "Bitcraze",
+    "type": "Flight Controller Expansion Addon / Positioning Deck",
+    "weight_g": 1.6,
+    "dimensions_mm": {
+        "width": 21.0,
+        "length": 28.0,
+        "height": 4.0
+    },
+    "sensors": {
+        "time_of_flight_distance": "STMicroelectronics VL53L1x (measures precise height up to 4 meters)",
+        "optical_flow_tracking": "PixArt PMW3901 (tracks ground movement and relative X/Y coordinates)"
+    },
+    "communication": {
+        "bus_interface": "I2C & SPI via Crazyflie expansion header pins",
+        "i2c_address": "0x29 (VL53L1x)"
+    },
+    "power_requirements": {
+        "voltage_v": 3.0,
+        "typical_current_consumption_ma": 40.0
+    },
+    "compatibility": [
+        "Crazyflie 2.X open-source nano-drones",
+        "Crazyflie Bolt ecosystem via standardized deck headers"
+    ],
+    "url": "https://www.bitcraze.io/products/flow-deck-v2/"
+}

@@ -1,0 +1,14 @@
+{
+    "model": "2520 Hurricane",
+    "size_inch": 2.5,
+    "pitch_inch": 2.0,
+    "num_blades": 3,
+    "weight_g_per_prop": 1.0,
+    "material": "Polycarbonate",
+    "suggested_motors": [
+        "1106",
+        "1204",
+        "1404"
+    ],
+    "url": "https://www.gemfanhobby.com/2520-hurricane-pc-3-blade.html"
+}

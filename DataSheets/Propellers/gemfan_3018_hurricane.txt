@@ -1,0 +1,14 @@
+{
+    "model": "3018 Hurricane",
+    "size_inch": 3.0,
+    "pitch_inch": 1.8,
+    "num_blades": 2,
+    "weight_g_per_prop": 0.83,
+    "material": "Polycarbonate",
+    "suggested_motors": [
+        "1108",
+        "1204",
+        "1303 5000KV"
+    ],
+    "url": "https://www.gemfanhobby.com/3018-hurricane-pc-2-blade.html"
+}

@@ -1,0 +1,30 @@
+{
+    "model": "XSD 12A Solder Version",
+    "manufacturer": "DYS (DongYang)",
+    "type": "Micro Electronic Speed Controller (ESC)",
+    "firmware": "BLHeli_S (EFM8BB21 50MHz MCU)",
+    "protocols_supported": [
+        "Dshot600",
+        "Dshot300",
+        "Multishot",
+        "Oneshot42",
+        "Oneshot125"
+    ],
+    "power_input_range": {
+        "cell_count_lipo": "1S - 3S",
+        "voltage_v": "3.0V - 12.6V"
+    },
+    "current_ratings": {
+        "continuous_a": 12.0,
+        "peak_burst_a": 15.0,
+        "burst_duration_s": 10.0
+    },
+    "bec": "None (OPTO / No BEC Onboard)",
+    "dimensions_mm": {
+        "length": 17.5,
+        "width": 11.5,
+        "height": 4.5
+    },
+    "weight_g": 1.0,
+    "url": "https://www.dys.hk/product/XSD%2012A.html"
+}

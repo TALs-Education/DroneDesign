@@ -1,0 +1,84 @@
+{
+    "model": "GTS V3 1203",
+    "manufacturer": "RCINPOWER",
+    "stator_dimensions": {
+        "diameter_mm": 12.0,
+        "height_mm": 3.0
+    },
+    "shaft_diameter_mm": 2.0,
+    "dimensions_mm": {
+        "diameter": 15.76,
+        "length": 9.9
+    },
+    "weight_g": 4.5,
+    "mounting_pattern": "M2 (9mm x 9mm)",
+    "url": "https://www.rcinpower.com/G-SERIES/65.html",
+    "configurations": [
+        {
+            "kv_rating": 11500,
+            "target_voltage": "1S - 2S",
+            "internal_resistance_mohm": 100,
+            "max_current_a": 13.2,
+            "max_power_w": 97.7,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 3.7,
+                    "cell_count": "1S",
+                    "throttle_pct": 50,
+                    "current_a": 2.1,
+                    "thrust_g": 42.0,
+                    "efficiency_g_w": 5.4
+                },
+                {
+                    "voltage_v": 3.7,
+                    "cell_count": "1S",
+                    "throttle_pct": 100,
+                    "current_a": 6.2,
+                    "thrust_g": 98.0,
+                    "efficiency_g_w": 4.27
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "throttle_pct": 50,
+                    "current_a": 4.5,
+                    "thrust_g": 105.0,
+                    "efficiency_g_w": 3.15
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "throttle_pct": 100,
+                    "current_a": 12.8,
+                    "thrust_g": 215.0,
+                    "efficiency_g_w": 2.27
+                }
+            ]
+        },
+        {
+            "kv_rating": 8000,
+            "target_voltage": "2S - 3S",
+            "internal_resistance_mohm": 167,
+            "max_current_a": 9.6,
+            "max_power_w": 106.6,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "throttle_pct": 50,
+                    "current_a": 2.8,
+                    "thrust_g": 82.0,
+                    "efficiency_g_w": 3.95
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "throttle_pct": 100,
+                    "current_a": 7.8,
+                    "thrust_g": 165.0,
+                    "efficiency_g_w": 2.85
+                }
+            ]
+        }
+    ]
+}

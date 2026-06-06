@@ -1,0 +1,117 @@
+{
+    "model": "GTS V3 1303 Plus",
+    "manufacturer": "RCINPOWER",
+    "stator_dimensions": {
+        "diameter_mm": 13.0,
+        "height_mm": 3.2
+    },
+    "shaft_diameter_mm": 1.5,
+    "dimensions_mm": {
+        "diameter": 16.5,
+        "length": 10.1
+    },
+    "weight_g": 5.6,
+    "mounting_pattern": "M2 (9mm x 9mm)",
+    "url": "https://www.rcinpower.com/G-SERIES/60.html",
+    "configurations": [
+        {
+            "kv_rating": 11500,
+            "target_voltage": "1S - 2S",
+            "internal_resistance_mohm": 105,
+            "max_current_a": 30.1,
+            "max_power_w": 223.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 3.7,
+                    "cell_count": "1S",
+                    "propeller_used": "Gemfan 3016 3-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 4.1,
+                    "thrust_g": 78.0,
+                    "efficiency_g_w": 5.15
+                },
+                {
+                    "voltage_v": 3.7,
+                    "cell_count": "1S",
+                    "propeller_used": "Gemfan 3016 3-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 13.8,
+                    "thrust_g": 221.0,
+                    "efficiency_g_w": 4.33
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 2540 3-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 5.1,
+                    "thrust_g": 138.0,
+                    "efficiency_g_w": 3.66
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 2540 3-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 24.5,
+                    "thrust_g": 382.0,
+                    "efficiency_g_w": 2.11
+                }
+            ]
+        },
+        {
+            "kv_rating": 8000,
+            "target_voltage": "2S - 3S",
+            "internal_resistance_mohm": 145,
+            "max_current_a": 22.5,
+            "max_power_w": 250.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 2520 3-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 3.2,
+                    "thrust_g": 112.0,
+                    "efficiency_g_w": 4.73
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 2520 3-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 14.8,
+                    "thrust_g": 298.0,
+                    "efficiency_g_w": 2.72
+                }
+            ]
+        },
+        {
+            "kv_rating": 6000,
+            "target_voltage": "2S - 4S",
+            "internal_resistance_mohm": 166,
+            "max_current_a": 16.9,
+            "max_power_w": 250.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 3018 2-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 2.1,
+                    "thrust_g": 94.0,
+                    "efficiency_g_w": 6.05
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 3018 2-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 10.2,
+                    "thrust_g": 245.0,
+                    "efficiency_g_w": 3.25
+                }
+            ]
+        }
+    ]
+}

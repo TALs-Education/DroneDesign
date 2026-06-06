@@ -1,0 +1,68 @@
+{
+    "model": "GTS V3 1404",
+    "manufacturer": "RCINPOWER",
+    "stator_dimensions": {
+        "diameter_mm": 14.0,
+        "height_mm": 4.0
+    },
+    "shaft_diameter_mm": 1.5,
+    "dimensions_mm": {
+        "diameter": 18.6,
+        "length": 13.2
+    },
+    "weight_g": 9.8,
+    "mounting_pattern": "M2 (9mm x 9mm) and (12mm x 12mm) variants depending on batch, standard is 9x9mm",
+    "url": "https://www.rcinpower.com/G-SERIES/64.html",
+    "configurations": [
+        {
+            "kv_rating": 6000,
+            "target_voltage": "2S",
+            "internal_resistance_mohm": 55,
+            "max_current_a": 19.5,
+            "max_power_w": 156.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "throttle_pct": 50,
+                    "current_a": 5.4,
+                    "thrust_g": 145.0,
+                    "efficiency_g_w": 3.63
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "throttle_pct": 100,
+                    "current_a": 18.2,
+                    "thrust_g": 380.0,
+                    "efficiency_g_w": 2.82
+                }
+            ]
+        },
+        {
+            "kv_rating": 5000,
+            "target_voltage": "2S - 3S",
+            "internal_resistance_mohm": 72,
+            "max_current_a": 16.0,
+            "max_power_w": 180.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "throttle_pct": 50,
+                    "current_a": 3.9,
+                    "thrust_g": 115.0,
+                    "efficiency_g_w": 3.98
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "throttle_pct": 100,
+                    "current_a": 13.5,
+                    "thrust_g": 295.0,
+                    "efficiency_g_w": 2.95
+                }
+            ]
+        }
+    ]
+}

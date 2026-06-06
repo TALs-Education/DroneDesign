@@ -1,0 +1,72 @@
+{
+    "model": "GTS 1204",
+    "manufacturer": "RCINPOWER",
+    "stator_dimensions": {
+        "diameter_mm": 12.0,
+        "height_mm": 4.0
+    },
+    "shaft_diameter_mm": 1.5,
+    "dimensions_mm": {
+        "diameter": 16.1,
+        "length": 10.9
+    },
+    "weight_g": 5.8,
+    "mounting_pattern": "M2 (9mm x 9mm)",
+    "url": "https://www.rcinpower.com/G-SERIES/31.html",
+    "configurations": [
+        {
+            "kv_rating": 8000,
+            "target_voltage": "2S",
+            "internal_resistance_mohm": 125,
+            "max_current_a": 16.2,
+            "max_power_w": 125.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 2520 3-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 3.4,
+                    "thrust_g": 102.0,
+                    "efficiency_g_w": 4.05
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 2520 3-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 13.9,
+                    "thrust_g": 265.0,
+                    "efficiency_g_w": 2.58
+                }
+            ]
+        },
+        {
+            "kv_rating": 5000,
+            "target_voltage": "2S - 3S",
+            "internal_resistance_mohm": 155,
+            "max_current_a": 11.8,
+            "max_power_w": 140.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 3018 2-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 2.3,
+                    "thrust_g": 92.0,
+                    "efficiency_g_w": 5.41
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 3018 2-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 9.8,
+                    "thrust_g": 210.0,
+                    "efficiency_g_w": 2.9
+                }
+            ]
+        }
+    ]
+}

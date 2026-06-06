@@ -1,0 +1,12 @@
+{
+    "model": "INR-21700-P50B",
+    "manufacturer": "Molicel",
+    "size_format": "21700",
+    "nominal_capacity_mah": 5000,
+    "nominal_voltage_v": 3.6,
+    "weight_g": 70.0,
+    "max_continuous_discharge_current_a": 50,
+    "peak_discharge_current_a": 100,
+    "max_charge_rate_a": 10.0,
+    "url": "https://www.molicel.com/inr-21700-p50b/"
+}

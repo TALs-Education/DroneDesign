@@ -1,0 +1,64 @@
+{
+    "model": "ROBO 1202.5 (New Version)",
+    "manufacturer": "Flywoo",
+    "stator_dimensions": {
+        "diameter_mm": 12.0,
+        "height_mm": 2.5
+    },
+    "shaft_diameter_mm": 1.5,
+    "dimensions_mm": {
+        "diameter": 15.4,
+        "length": 9.2
+    },
+    "weight_g": 3.8,
+    "mounting_pattern": "M2 (9mm x 9mm)",
+    "url": "https://flywoo.net/products/flywoo-robo-1202.5-11500kv-fpv-motor-gold-purple-new-version-",
+    "color_scheme": "Gold / Purple",
+    "configurations": [
+        {
+            "kv_rating": 11500,
+            "target_voltage": "1S - 2S",
+            "internal_resistance_mohm": 115,
+            "max_current_a": 14.2,
+            "max_power_w": 105.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 3.7,
+                    "cell_count": "1S",
+                    "propeller_used": "Gemfan 2520 3-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 2.4,
+                    "thrust_g": 46.0,
+                    "efficiency_g_w": 5.18
+                },
+                {
+                    "voltage_v": 3.7,
+                    "cell_count": "1S",
+                    "propeller_used": "Gemfan 2520 3-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 6.9,
+                    "thrust_g": 102.0,
+                    "efficiency_g_w": 3.99
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 2020 3-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 4.9,
+                    "thrust_g": 110.0,
+                    "efficiency_g_w": 3.04
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 2020 3-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 13.8,
+                    "thrust_g": 224.0,
+                    "efficiency_g_w": 2.19
+                }
+            ]
+        }
+    ]
+}

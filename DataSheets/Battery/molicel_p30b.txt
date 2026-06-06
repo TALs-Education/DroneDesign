@@ -1,0 +1,12 @@
+{
+    "model": "INR-18650-P30B",
+    "manufacturer": "Molicel",
+    "size_format": "18650",
+    "nominal_capacity_mah": 3000,
+    "nominal_voltage_v": 3.6,
+    "weight_g": 48.0,
+    "max_continuous_discharge_current_a": 36,
+    "peak_discharge_current_a": 60,
+    "max_charge_rate_a": 9.0,
+    "url": "https://www.molicel.com/inr-18650-p30b/"
+}

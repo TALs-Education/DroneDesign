@@ -1,0 +1,47 @@
+{
+    "model": "ROBO RB 1303",
+    "manufacturer": "Flywoo",
+    "stator_dimensions": {
+        "diameter_mm": 13.0,
+        "height_mm": 3.0
+    },
+    "shaft_diameter_mm": 1.5,
+    "dimensions_mm": {
+        "diameter": 16.5,
+        "length": 10.0
+    },
+    "weight_g": 6.1,
+    "mounting_pattern": "M2 (9mm x 9mm)",
+    "url": "https://flywoo.net/products/robo-1303-6000kv-2-4s-fpv-motor",
+    "bearing_type": "NSK Dual Bearing",
+    "magnet_type": "N52H Arc Magnets",
+    "configurations": [
+        {
+            "kv_rating": 6000,
+            "target_voltage": "2S - 4S",
+            "internal_resistance_mohm": 148,
+            "max_current_a": 15.4,
+            "max_power_w": 230.0,
+            "experimental_bench_data": [
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 3018 2-Blade",
+                    "throttle_pct": 50,
+                    "current_a": 2.2,
+                    "thrust_g": 95.0,
+                    "efficiency_g_w": 5.83
+                },
+                {
+                    "voltage_v": 7.4,
+                    "cell_count": "2S",
+                    "propeller_used": "Gemfan 3018 2-Blade",
+                    "throttle_pct": 100,
+                    "current_a": 10.5,
+                    "thrust_g": 248.0,
+                    "efficiency_g_w": 3.2
+                }
+            ]
+        }
+    ]
+}

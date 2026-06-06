@@ -1,0 +1,16 @@
+{
+    "model": "2826 Drone Soccer",
+    "manufacturer": "Gemfan",
+    "size_inch": 2.8,
+    "pitch_inch": 2.6,
+    "num_blades": 3,
+    "weight_g_per_prop": 1.47,
+    "material": "Polycarbonate",
+    "suggested_motors": [
+        "1205",
+        "1106",
+        "1303",
+        "1404"
+    ],
+    "url": "https://www.gemfanhobby.com/2826-drone-soccer-pc-3-blade.html"
+}

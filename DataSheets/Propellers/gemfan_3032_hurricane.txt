@@ -1,0 +1,16 @@
+{
+    "model": "3032 Hurricane",
+    "manufacturer": "Gemfan",
+    "size_inch": 3.0,
+    "pitch_inch": 3.2,
+    "num_blades": 3,
+    "weight_g_per_prop": 1.7,
+    "material": "Polycarbonate",
+    "suggested_motors": [
+        "1306",
+        "1404",
+        "1408",
+        "1507"
+    ],
+    "url": "https://www.gemfanhobby.com/3032-gemfan-pc-3-blade.html"
+}

@@ -1,0 +1,14 @@
+{
+    "model": "2540 Flash",
+    "size_inch": 2.5,
+    "pitch_inch": 4.0,
+    "num_blades": 3,
+    "weight_g_per_prop": 0.98,
+    "material": "Polycarbonate",
+    "suggested_motors": [
+        "1103 8000KV",
+        "1105 5000KV",
+        "1106 4500KV"
+    ],
+    "url": "https://www.gemfanhobby.com/2540-flash-pc-3-blade.html"
+}

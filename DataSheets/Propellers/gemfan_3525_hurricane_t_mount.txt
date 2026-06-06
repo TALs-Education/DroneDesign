@@ -1,0 +1,14 @@
+{
+    "model": "3525 Hurricane T-Mount",
+    "size_inch": 3.5,
+    "pitch_inch": 2.5,
+    "num_blades": 3,
+    "weight_g_per_prop": 1.75,
+    "material": "Polycarbonate",
+    "suggested_motors": [
+        "1404",
+        "1806",
+        "2004"
+    ],
+    "url": "https://www.gemfanhobby.com/3525-hurricane-pc-3-blade-t-mount.html"
+}
