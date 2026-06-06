@@ -18,22 +18,13 @@ In the lab, students measure thrust versus current for different motor and prope
 
 The next step is control: students learn how to stabilize a fixed drone setup. The drone is attached to a load cell for lift measurement and constrained in all axes except one rotational axis. This allows students to practice stabilization and maneuvering in a controlled lab environment before progressing to less constrained flight experiments.
 
-## Site Pages
-
-- `index.html` - Landing page for the project.
-- `DroneDesigner.html` - Interactive drone design tool.
-- `DataSheets/` - Source component data used by the designer.
-- `Images/` - Project photos used by the landing page.
-
 ## Selected Design Ver 1
 
 ![Selected Design Ver 1](Images/1S21700Drone.jpg)
 
 ### BOM List
 
-The selected Ver 1 bill of materials is published here:
-
-<https://docs.google.com/spreadsheets/d/e/2PACX-1vT2DtydTzekY1mokOnh3ZIie18SPq6R37-j9ZMFiFX3chI8BBx9N6xgQAwgINsrMxRPPAHhBhgmAgD4/pubhtml>
+[BOM List](https://docs.google.com/spreadsheets/d/e/2PACX-1vT2DtydTzekY1mokOnh3ZIie18SPq6R37-j9ZMFiFX3chI8BBx9N6xgQAwgINsrMxRPPAHhBhgmAgD4/pubhtml)
 
 The landing page includes a thumbnail of the drone. Selecting the thumbnail opens the full-size image.
 
