@@ -2,7 +2,11 @@
 
 Drone Design Lab is an educational web project for exploring small-drone component choices and connecting those choices to hands-on lab measurements.
 
-The project is hosted at:
+The published site is available at:
+
+<https://tals-education.github.io/DroneDesign/>
+
+The project repository is:
 
 <https://github.com/TALs-Education/DroneDesign>
 
@@ -23,7 +27,11 @@ The next step is control: students learn how to stabilize a fixed drone setup. T
 
 ## Selected Design Ver 1
 
-The selected Ver 1 component list is published here:
+![Selected Design Ver 1](Images/1S21700Drone.jpg)
+
+### BOM List
+
+The selected Ver 1 bill of materials is published here:
 
 <https://docs.google.com/spreadsheets/d/e/2PACX-1vT2DtydTzekY1mokOnh3ZIie18SPq6R37-j9ZMFiFX3chI8BBx9N6xgQAwgINsrMxRPPAHhBhgmAgD4/pubhtml>
 
@@ -45,4 +53,4 @@ This is a static site. Open `index.html` in a browser, then follow the link to `
 
 ## License
 
-See `LICENSE` for the project license.
+This project is licensed under the GNU General Public License. See [LICENSE](LICENSE) for the full license text.
