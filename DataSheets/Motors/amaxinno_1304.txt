@@ -1,0 +1,100 @@
+{
+    "model": "1304 Competition Series",
+    "manufacturer": "AMAXInno",
+    "type": "Brushless Micro Motor",
+    "stator_dimensions": {
+        "diameter_mm": 13.0,
+        "height_mm": 4.0
+    },
+    "weight_g": 6.1,
+    "mounting_pattern": "M2 (9mm x 9mm)",
+    "url": "https://amaxshop.com/index.php?route=product/product&product_id=1808",
+    "configurations": [
+        {
+            "kv_rating": 8000,
+            "target_voltage": "2S LiPo (8V)",
+            "tested_propeller": "3.5 x 2",
+            "max_temperature_100_pct_10s": "58\u00b0C",
+            "experimental_bench_data": [
+                {
+                    "throttle_pct": 30,
+                    "current_a": 2.5,
+                    "thrust_g": 108,
+                    "power_w": 28,
+                    "efficiency_g_w": 3.84
+                },
+                {
+                    "throttle_pct": 50,
+                    "current_a": 4.5,
+                    "thrust_g": 162,
+                    "power_w": 51,
+                    "efficiency_g_w": 3.2
+                },
+                {
+                    "throttle_pct": 70,
+                    "current_a": 8.0,
+                    "thrust_g": 240,
+                    "power_w": 90,
+                    "efficiency_g_w": 2.67
+                },
+                {
+                    "throttle_pct": 90,
+                    "current_a": 12.0,
+                    "thrust_g": 318,
+                    "power_w": 135,
+                    "efficiency_g_w": 2.36
+                },
+                {
+                    "throttle_pct": 100,
+                    "current_a": 14.0,
+                    "thrust_g": 346,
+                    "power_w": 158,
+                    "efficiency_g_w": 2.19
+                }
+            ]
+        },
+        {
+            "kv_rating": 7000,
+            "target_voltage": "2S LiPo (8V)",
+            "tested_propeller": "4 x 2",
+            "max_temperature_100_pct_10s": "79\u00b0C",
+            "experimental_bench_data": [
+                {
+                    "throttle_pct": 30,
+                    "current_a": 2.0,
+                    "thrust_g": 96,
+                    "power_w": 23,
+                    "efficiency_g_w": 4.27
+                },
+                {
+                    "throttle_pct": 50,
+                    "current_a": 4.0,
+                    "thrust_g": 156,
+                    "power_w": 45,
+                    "efficiency_g_w": 3.47
+                },
+                {
+                    "throttle_pct": 70,
+                    "current_a": 7.0,
+                    "thrust_g": 240,
+                    "power_w": 79,
+                    "efficiency_g_w": 3.05
+                },
+                {
+                    "throttle_pct": 90,
+                    "current_a": 12.0,
+                    "thrust_g": 374,
+                    "power_w": 135,
+                    "efficiency_g_w": 2.77
+                },
+                {
+                    "throttle_pct": 100,
+                    "current_a": 14.0,
+                    "thrust_g": 420,
+                    "power_w": 158,
+                    "efficiency_g_w": 2.67
+                }
+            ]
+        }
+    ]
+}

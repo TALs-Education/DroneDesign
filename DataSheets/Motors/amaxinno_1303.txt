@@ -1,0 +1,57 @@
+{
+    "model": "1303 Competition Series",
+    "manufacturer": "AMAXInno",
+    "type": "Brushless Micro Motor",
+    "stator_dimensions": {
+        "diameter_mm": 13.0,
+        "height_mm": 3.0
+    },
+    "weight_g": 4.9,
+    "mounting_pattern": "M2 (9mm x 9mm)",
+    "url": "https://amaxshop.com/index.php?route=product/product&product_id=2177",
+    "configurations": [
+        {
+            "kv_rating": 7000,
+            "target_voltage": "2S LiPo (8V)",
+            "tested_propeller": "3.5 x 2",
+            "max_temperature_100_pct_10s": "52\u00b0C",
+            "experimental_bench_data": [
+                {
+                    "throttle_pct": 30,
+                    "current_a": 2.0,
+                    "thrust_g": 96,
+                    "power_w": 15,
+                    "efficiency_g_w": 6.4
+                },
+                {
+                    "throttle_pct": 50,
+                    "current_a": 4.0,
+                    "thrust_g": 144,
+                    "power_w": 30,
+                    "efficiency_g_w": 4.8
+                },
+                {
+                    "throttle_pct": 70,
+                    "current_a": 8.0,
+                    "thrust_g": 216,
+                    "power_w": 60,
+                    "efficiency_g_w": 3.6
+                },
+                {
+                    "throttle_pct": 90,
+                    "current_a": 11.0,
+                    "thrust_g": 288,
+                    "power_w": 83,
+                    "efficiency_g_w": 3.49
+                },
+                {
+                    "throttle_pct": 100,
+                    "current_a": 13.0,
+                    "thrust_g": 312,
+                    "power_w": 98,
+                    "efficiency_g_w": 3.2
+                }
+            ]
+        }
+    ]
+}
