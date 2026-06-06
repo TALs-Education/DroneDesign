@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drone Designer — Sub 250g System</title>
+<style>
+:root{
+  --bg:#080b12;--surf:#0f1320;--surf2:#161928;--surf3:#1d2135;
+  --border:#252840;--border2:#303558;
+  --text:#dde1f0;--dim:#6b7394;--dimmer:#404660;
+  --accent:#4e9eff;--accent2:#00d4a8;
+  --ok:#3ecf82;--warn:#ffaa38;--err:#ff4d6d;--info:#7b9fff;
+  --r:10px;--r-sm:6px;
+  --sidebar-w:210px;
+  --results-h:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;font-size:14px}
+
+/* ── HEADER ─────────────────────────────────── */
+header{
+  background:linear-gradient(135deg,#0b1020 0%,#0d1428 100%);
+  border-bottom:1px solid var(--border);
+  padding:16px 28px;display:flex;align-items:center;gap:14px;
+  position:sticky;top:0;z-index:200;
+}
+.logo-icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-icon svg{width:26px;height:26px}
+.header-text h1{font-size:1.25rem;font-weight:800;letter-spacing:-.3px}
+.header-text h1 em{font-style:normal;color:var(--accent)}
+.header-text p{font-size:.75rem;color:var(--dim);margin-top:2px}
+.header-badges{margin-left:auto;display:flex;gap:8px}
+.h-badge{
+  border-radius:20px;padding:4px 12px;font-size:.7rem;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;
+}
+.h-badge-blue{background:rgba(78,158,255,.15);color:var(--accent);border:1px solid rgba(78,158,255,.3)}
+.h-badge-green{background:rgba(62,207,130,.15);color:var(--ok);border:1px solid rgba(62,207,130,.3)}
+
+/* ── LAYOUT ──────────────────────────────────── */
+.app{display:flex;height:calc(100vh - 77px - var(--results-h))}
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--surf);border-right:1px solid var(--border);
+  overflow-y:auto;padding:16px 0;
+}
+.main{flex:1;overflow-y:auto;padding:24px 28px 32px}
+
+/* ── SIDEBAR STEPS ────────────────────────────── */
+.step-link{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;cursor:pointer;
+  border-left:3px solid transparent;transition:all .15s;
+  text-decoration:none;color:var(--text);
+}
+.step-link:hover{background:var(--surf2);border-left-color:var(--border2)}
+.step-link.active{background:var(--surf2);border-left-color:var(--accent)}
+.step-link.done .snum{background:var(--ok);color:#000;border-color:var(--ok)}
+.snum{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:var(--surf3);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:800;transition:all .15s;
+}
+.stext{line-height:1.2}
+.stext strong{font-size:.82rem;font-weight:700;display:block}
+.stext span{font-size:.7rem;color:var(--dim)}
+
+/* ── SECTION ─────────────────────────────────── */
+.section{scroll-margin-top:24px;margin-bottom:44px}
+.sec-header{margin-bottom:16px}
+.sec-header h2{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:8px}
+.sec-header h2 .sec-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--accent);color:#000;
+  font-size:.72rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.sec-header p{font-size:.78rem;color:var(--dim);margin-top:5px}
+.hint-box{
+  background:var(--surf2);border:1px dashed var(--border2);
+  border-radius:var(--r);padding:10px 14px;
+  font-size:.78rem;color:var(--dim);margin-bottom:14px;
+}
+
+/* ── CARD GRID ───────────────────────────────── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.card-grid-wide{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.esc-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr))}
+.component-group{margin-top:14px}
+.component-group:first-child{margin-top:0}
+.component-group-title{
+  color:var(--dim);font-size:.72rem;font-weight:900;text-transform:uppercase;
+  letter-spacing:.6px;margin:0 0 8px;
+}
+
+/* ── CARD ────────────────────────────────────── */
+.card{
+  background:var(--surf);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:14px;cursor:pointer;
+  transition:border-color .15s,transform .1s,box-shadow .15s;
+  position:relative;overflow-wrap:anywhere;
+}
+.card:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 20px rgba(78,158,255,.1)}
+.card.selected{border-color:var(--accent);background:rgba(78,158,255,.07)}
+.card.disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+.card.no-bench{opacity:.5;cursor:not-allowed;pointer-events:none}
+.sel-check{
+  display:none;position:absolute;top:10px;right:10px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--accent);color:#000;
+  align-items:center;justify-content:center;font-size:.7rem;font-weight:900;
+}
+.card.selected .sel-check{display:flex}
+.fc-card.selected .sel-check{display:flex}
+.card-mfr{font-size:.68rem;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.card-name{font-size:.92rem;font-weight:800;margin-bottom:3px;padding-right:26px}
+.card-sub{font-size:.75rem;color:var(--dim);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.chip{
+  background:var(--surf3);border:1px solid var(--border2);
+  border-radius:var(--r-sm);padding:2px 8px;font-size:.68rem;font-weight:700;
+}
+.chip-accent{background:rgba(78,158,255,.12);border-color:rgba(78,158,255,.3);color:var(--accent)}
+.no-bench-label{
+  margin-top:8px;font-size:.72rem;
+  color:var(--err);font-weight:700;
+}
+
+/* ── KV PREF BADGE ────────────────────────────── */
+.pref-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  border-radius:var(--r-sm);padding:2px 8px;
+  font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+}
+.pref-preferred{background:rgba(62,207,130,.15);color:var(--ok);border:1px solid rgba(62,207,130,.3)}
+.pref-acceptable{background:rgba(255,170,56,.15);color:var(--warn);border:1px solid rgba(255,170,56,.3)}
+.pref-not-recommended{background:rgba(255,77,109,.12);color:var(--err);border:1px solid rgba(255,77,109,.25)}
+.pref-no-data{background:rgba(107,115,148,.12);color:var(--dim);border:1px solid var(--border)}
+
+/* ── PROP STATUS BADGE ───────────────────────── */
+.prop-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  border-radius:var(--r-sm);padding:2px 9px;
+  font-size:.7rem;font-weight:800;line-height:1.35;
+}
+.prop-optimal{background:rgba(62,207,130,.15);color:var(--ok);border:1px solid rgba(62,207,130,.3)}
+.prop-acceptable{background:rgba(255,170,56,.12);color:var(--warn);border:1px solid rgba(255,170,56,.25)}
+.prop-over{background:rgba(255,77,109,.15);color:var(--err);border:1px solid rgba(255,77,109,.3)}
+.prop-under{background:rgba(123,159,255,.15);color:var(--info);border:1px solid rgba(123,159,255,.3)}
+.prop-unknown{background:var(--surf3);color:var(--dim);border:1px solid var(--border)}
+.prop-msg{font-size:.7rem;color:var(--dim);margin-top:5px;line-height:1.4}
+
+/* ── KV VARIANT TABLE ─────────────────────────── */
+.kv-table{width:100%;border-collapse:collapse;margin-top:8px}
+.kv-table td{padding:5px 6px;font-size:.75rem;vertical-align:middle}
+.kv-table tr{border-top:1px solid var(--border)}
+.kv-table tr:first-child{border-top:none}
+.kv-radio-row{cursor:pointer;border-radius:var(--r-sm);transition:background .12s}
+.kv-radio-row:hover td{background:var(--surf3)}
+.kv-radio-row.kv-selected td{background:rgba(78,158,255,.1)}
+.kv-radio-row.kv-disabled{opacity:.35;cursor:not-allowed}
+input[type=radio]{accent-color:var(--accent)}
+
+/* ── BUILD / PAYLOAD ──────────────────────────── */
+.input-row{display:flex;gap:14px;flex-wrap:wrap}
+.input-grp{flex:1;min-width:180px}
+.input-grp label{display:block;font-size:.78rem;font-weight:700;color:var(--dim);margin-bottom:6px}
+.input-grp input{
+  width:100%;background:var(--surf);border:1.5px solid var(--border2);
+  border-radius:var(--r);padding:9px 12px;color:var(--text);
+  font-size:.95rem;font-family:inherit;outline:none;
+  transition:border-color .15s;
+}
+.input-grp input:focus{border-color:var(--accent)}
+.input-unit{font-size:.72rem;color:var(--dim);margin-top:4px}
+
+/* ── FC CARD (single, always selected) ──────── */
+.fc-card{
+  background:var(--surf);border:1.5px solid var(--accent);
+  border-radius:var(--r);padding:16px;
+  background:rgba(78,158,255,.05);
+  position:relative;
+}
+.fc-card .card-name{color:var(--accent)}
+.fc-card.optional{border-color:var(--border);cursor:pointer}
+.fc-card.optional:hover{border-color:var(--accent)}
+.fc-card.optional.selected{border-color:var(--accent);background:rgba(78,158,255,.08)}
+.feature-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.feat-chip{
+  background:var(--surf3);border:1px solid var(--border2);
+  border-radius:20px;padding:2px 10px;font-size:.68rem;color:var(--dim);
+}
+
+/* ── RESULTS PANEL ───────────────────────────── */
+.results-panel{
+  height:var(--results-h);
+  background:var(--surf);border-top:2px solid var(--accent);
+  padding:14px 28px;position:sticky;bottom:0;z-index:150;
+  display:flex;flex-direction:column;gap:10px;
+}
+.res-row{display:flex;gap:12px;flex:1}
+.res-metric{
+  flex:1;background:var(--surf2);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 14px;min-width:120px;
+}
+.res-label{font-size:.65rem;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.res-value{font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
+.res-value.ok{color:var(--ok)}
+.res-value.warn{color:var(--warn)}
+.res-value.err{color:var(--err)}
+.res-sub{font-size:.7rem;color:var(--dim);margin-top:4px}
+.res-bar{height:5px;background:var(--surf3);border-radius:3px;overflow:hidden;margin-top:7px}
+.res-bar-fill{height:100%;border-radius:3px;transition:width .4s,background .3s}
+
+/* Weight breakdown column */
+.weight-col{
+  width:200px;flex-shrink:0;background:var(--surf2);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 14px;
+}
+.wb-row{display:flex;justify-content:space-between;align-items:center;font-size:.7rem;margin-bottom:3px}
+.wb-label{color:var(--dim)}
+.wb-val{font-weight:700;font-variant-numeric:tabular-nums}
+.wb-divider{border:none;border-top:1px solid var(--border);margin:5px 0}
+.wb-total{font-weight:900;font-size:.78rem}
+.wb-total .wb-val{color:var(--accent)}
+
+/* Warnings bar */
+.warnings-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;min-height:28px}
+.warn-chip{
+  display:flex;align-items:center;gap:5px;
+  border-radius:var(--r-sm);padding:4px 10px;font-size:.72rem;font-weight:700;
+}
+.warn-err{background:rgba(255,77,109,.15);color:var(--err);border:1px solid rgba(255,77,109,.3)}
+.warn-warn{background:rgba(255,170,56,.12);color:var(--warn);border:1px solid rgba(255,170,56,.25)}
+.warn-info{background:rgba(78,158,255,.1);color:var(--info);border:1px solid rgba(78,158,255,.25)}
+.warn-ok{font-size:.78rem;color:var(--ok);font-weight:700}
+.warn-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.warn-dot-err{background:var(--err)}
+.warn-dot-warn{background:var(--warn)}
+.warn-dot-info{background:var(--info)}
+.bom-btn{
+  background:var(--accent);color:#000;border:0;border-radius:var(--r-sm);
+  padding:6px 12px;font-size:.72rem;font-weight:900;cursor:pointer;
+  text-transform:uppercase;letter-spacing:.4px;
+}
+.bom-btn:hover{filter:brightness(1.08)}
+.bom-btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+
+/* ── MISC ─────────────────────────────────────── */
+.divider{height:1px;background:var(--border);margin:28px 0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.empty-note{color:var(--dim);font-size:.82rem;padding:24px;text-align:center}
+
+@media(max-width:860px){
+  .app{flex-direction:column;height:auto}
+  .sidebar{width:100%;display:flex;flex-wrap:wrap;overflow:visible;padding:8px}
+  .step-link{flex-direction:column;padding:8px 10px;gap:4px;align-items:center;text-align:center;border-left:none;border-bottom:3px solid transparent}
+  .step-link.active{border-bottom-color:var(--accent);border-left-color:transparent}
+  .stext span{display:none}
+  :root{--results-h:260px}
+  .res-row{flex-wrap:wrap}
+  .weight-col{width:100%}
+}
+@media(max-width:560px){
+  :root{--results-h:320px}
+  header{padding:12px 16px}
+  .header-badges{display:none}
+  .main{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">
+    <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="13" cy="13" r="3" fill="#000" opacity=".7"/>
+      <rect x="12" y="2" width="2" height="6" rx="1" fill="#000" opacity=".8"/>
+      <rect x="12" y="18" width="2" height="6" rx="1" fill="#000" opacity=".8"/>
+      <rect x="2" y="12" width="6" height="2" rx="1" fill="#000" opacity=".8"/>
+      <rect x="18" y="12" width="6" height="2" rx="1" fill="#000" opacity=".8"/>
+      <circle cx="5" cy="5" r="3.5" stroke="#000" stroke-width="1.5" fill="none" opacity=".6"/>
+      <circle cx="21" cy="5" r="3.5" stroke="#000" stroke-width="1.5" fill="none" opacity=".6"/>
+      <circle cx="5" cy="21" r="3.5" stroke="#000" stroke-width="1.5" fill="none" opacity=".6"/>
+      <circle cx="21" cy="21" r="3.5" stroke="#000" stroke-width="1.5" fill="none" opacity=".6"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>Drone Designer <em>Sub 250g</em> System</h1>
+    <p>Educational design tool — select components step by step to estimate performance</p>
+  </div>
+  <div class="header-badges">
+    <span class="h-badge h-badge-blue">DroneDesigner</span>
+    <span class="h-badge h-badge-green">Sub 250g</span>
+  </div>
+</header>
+
+<div class="app">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="main" id="main"></main>
+</div>
+
+<div class="results-panel" id="results"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  DATABASE — sourced from DataSheets/
+// ═══════════════════════════════════════════════════
+const DB = {
+  batteries: [
+    {
+      id:'p50b_1s', manufacturer:'Molicel', model:'INR-21700-P50B',
+      label:'1S 21700', subtitle:'High capacity · High discharge',
+      cells:1, voltage_v:3.7, capacity_mah:5000, weight_g:70,
+      max_continuous_a:50, peak_a:100, cell_key:'1s',
+      url:'https://www.molicel.com/inr-21700-p50b/'
+    },
+    {
+      id:'p30b_1s', manufacturer:'Molicel', model:'INR-18650-P30B',
+      label:'1S 18650', subtitle:'Lightweight · Moderate capacity',
+      cells:1, voltage_v:3.7, capacity_mah:3000, weight_g:48,
+      max_continuous_a:36, peak_a:60, cell_key:'1s',
+      url:'https://www.molicel.com/inr-18650-p30b/'
+    },
+    {
+      id:'p30b_2s', manufacturer:'Molicel', model:'INR-18650-P30B ×2',
+      label:'2S 18650', subtitle:'Higher voltage · More motor options',
+      cells:2, voltage_v:7.4, capacity_mah:3000, weight_g:96,
+      max_continuous_a:36, peak_a:60, cell_key:'2s',
+      url:'https://www.molicel.com/inr-18650-p30b/'
+    }
+  ],
+
+  motors: [
+    {
+      id:'flywoo_robo_1202_5', manufacturer:'Flywoo', model:'ROBO 1202.5',
+      stator:'12×2.5 mm', weight_g:3.8,
+      url:'https://flywoo.net/products/flywoo-robo-1202.5-11500kv-fpv-motor',
+      configs:[
+        {
+          kv:11500, target:'1S – 2S', max_current_a:14.2, max_power_w:105, ir_mohm:115,
+          bench:{
+            '1s':[{t:50,thrust:46,current:2.4},{t:100,thrust:102,current:6.9}],
+            '2s':[{t:50,thrust:110,current:4.9},{t:100,thrust:224,current:13.8}]
+          },
+          prop_ref:{'1s':'gemfan_2520','2s':null}
+        }
+      ]
+    },
+    {
+      id:'rcinpower_gts_v3_1203', manufacturer:'RCINPOWER', model:'GTS V3 1203',
+      stator:'12×3 mm', weight_g:4.5,
+      url:'https://www.rcinpower.com/G-SERIES/65.html',
+      configs:[
+        {
+          kv:11500, target:'1S – 2S', max_current_a:13.2, max_power_w:97.7, ir_mohm:100,
+          bench:{
+            '1s':[{t:50,thrust:42,current:2.1},{t:100,thrust:98,current:6.2}],
+            '2s':[{t:50,thrust:105,current:4.5},{t:100,thrust:215,current:12.8}]
+          },
+          prop_ref:{'1s':'gemfan_2520','2s':null}
+        },
+        {
+          kv:8000, target:'2S – 3S', max_current_a:9.6, max_power_w:106.6, ir_mohm:167,
+          bench:{
+            '2s':[{t:50,thrust:82,current:2.8},{t:100,thrust:165,current:7.8}]
+          },
+          prop_ref:{'2s':'gemfan_2520'}
+        }
+      ]
+    },
+    {
+      id:'rcinpower_gts_1202_5', manufacturer:'RCINPOWER', model:'GTS 1202.5',
+      stator:'12×2.5 mm', weight_g:3.8,
+      url:'https://www.rcinpower.com/G-SERIES/45.html',
+      configs:[
+        {
+          kv:11500, target:'1S - 2S', max_current_a:13.8, max_power_w:102.0, ir_mohm:112,
+          bench:{
+            '1s':[{t:50,thrust:45,current:2.3},{t:100,thrust:100,current:6.7}],
+            '2s':[{t:50,thrust:108,current:4.7},{t:100,thrust:218,current:13.4}]
+          },
+          prop_ref:{'1s':'gemfan_2520','2s':null}
+        },
+        {
+          kv:6000, target:'2S - 4S', max_current_a:9.2, max_power_w:136.0, ir_mohm:160,
+          bench:{
+            '2s':[{t:50,thrust:80,current:1.9},{t:100,thrust:185,current:8.1}]
+          },
+          prop_ref:{'2s':'gemfan_3018'}
+        }
+      ]
+    },
+    {
+      id:'rcinpower_gts_1204', manufacturer:'RCINPOWER', model:'GTS 1204',
+      stator:'12×4 mm', weight_g:5.8,
+      url:'https://www.rcinpower.com/G-SERIES/31.html',
+      configs:[
+        {
+          kv:8000, target:'2S', max_current_a:16.2, max_power_w:125.0, ir_mohm:125,
+          bench:{
+            '2s':[{t:50,thrust:102,current:3.4},{t:100,thrust:265,current:13.9}]
+          },
+          prop_ref:{'2s':'gemfan_2520'}
+        },
+        {
+          kv:5000, target:'2S - 3S', max_current_a:11.8, max_power_w:140.0, ir_mohm:155,
+          bench:{
+            '2s':[{t:50,thrust:92,current:2.3},{t:100,thrust:210,current:9.8}]
+          },
+          prop_ref:{'2s':'gemfan_3018'}
+        }
+      ]
+    },
+    {
+      id:'rcinpower_gts_v3_1303', manufacturer:'RCINPOWER', model:'GTS V3 1303 Plus',
+      stator:'13×3.2 mm', weight_g:5.6,
+      url:'https://www.rcinpower.com/G-SERIES/60.html',
+      configs:[
+        {
+          kv:11500, target:'1S – 2S', max_current_a:30.1, max_power_w:223, ir_mohm:105,
+          bench:{
+            '1s':[{t:50,thrust:78,current:4.1},{t:100,thrust:221,current:13.8}],
+            '2s':[{t:50,thrust:138,current:5.1},{t:100,thrust:382,current:24.5}]
+          },
+          prop_ref:{'1s':'gemfan_3018','2s':'gemfan_2540'}
+        },
+        {
+          kv:8000, target:'2S – 3S', max_current_a:22.5, max_power_w:250, ir_mohm:145,
+          bench:{
+            '2s':[{t:50,thrust:112,current:3.2},{t:100,thrust:298,current:14.8}]
+          },
+          prop_ref:{'2s':'gemfan_2520'}
+        },
+        {
+          kv:6000, target:'2S – 4S', max_current_a:16.9, max_power_w:250, ir_mohm:166,
+          bench:{
+            '2s':[{t:50,thrust:94,current:2.1},{t:100,thrust:245,current:10.2}]
+          },
+          prop_ref:{'2s':'gemfan_3018'}
+        }
+      ]
+    },
+    {
+      id:'flywoo_robo_1303', manufacturer:'Flywoo', model:'ROBO RB 1303',
+      stator:'13×3 mm', weight_g:6.1,
+      url:'https://flywoo.net/products/robo-1303-6000kv-2-4s-fpv-motor',
+      configs:[
+        {
+          kv:6000, target:'2S – 4S', max_current_a:15.4, max_power_w:230, ir_mohm:148,
+          bench:{
+            '2s':[{t:50,thrust:95,current:2.2},{t:100,thrust:248,current:10.5}]
+          },
+          prop_ref:{'2s':'gemfan_3018'}
+        }
+      ]
+    },
+    {
+      id:'rcinpower_gts_v3_1404', manufacturer:'RCINPOWER', model:'GTS V3 1404',
+      stator:'14×4 mm', weight_g:9.8,
+      url:'https://www.rcinpower.com/G-SERIES/64.html',
+      configs:[
+        {
+          kv:6000, target:'2S', max_current_a:19.5, max_power_w:156, ir_mohm:55,
+          bench:{
+            '2s':[{t:50,thrust:145,current:5.4},{t:100,thrust:380,current:18.2}]
+          },
+          prop_ref:{'2s':'gemfan_3525'}
+        },
+        {
+          kv:5000, target:'2S – 3S', max_current_a:16.0, max_power_w:180, ir_mohm:72,
+          bench:{
+            '2s':[{t:50,thrust:115,current:3.9},{t:100,thrust:295,current:13.5}]
+          },
+          prop_ref:{'2s':'gemfan_3525'}
+        }
+      ]
+    }
+  ],
+
+  props: [
+    {
+      id:'gemfan_2520', model:'Gemfan 2520 Hurricane',
+      diameter_in:2.5, pitch_in:2.0, blades:3, weight_g:1.0, material:'PC',
+      url:'https://www.gemfanhobby.com/2520-hurricane-pc-3-blade.html'
+    },
+    {
+      id:'gemfan_2540', model:'Gemfan 2540 Flash',
+      diameter_in:2.5, pitch_in:4.0, blades:3, weight_g:0.98, material:'PC',
+      url:'https://www.gemfanhobby.com/2540-flash-pc-3-blade.html'
+    },
+    {
+      id:'gemfan_2826', model:'Gemfan 2826 Drone Soccer',
+      diameter_in:2.8, pitch_in:2.6, blades:3, weight_g:1.47, material:'PC',
+      url:'https://www.gemfanhobby.com/2826-drone-soccer-pc-3-blade.html'
+    },
+    {
+      id:'gemfan_3018', model:'Gemfan 3018 Hurricane',
+      diameter_in:3.0, pitch_in:1.8, blades:2, weight_g:0.83, material:'PC',
+      url:'https://www.gemfanhobby.com/3018-hurricane-pc-2-blade.html'
+    },
+    {
+      id:'gemfan_3020', model:'Gemfan 3020 Hurricane',
+      diameter_in:3.0, pitch_in:2.0, blades:3, weight_g:1.3, material:'PC',
+      url:'https://www.gemfanhobby.com/3020-hurricane-pc-3-blade.html'
+    },
+    {
+      id:'gemfan_3032', model:'Gemfan 3032 Hurricane',
+      diameter_in:3.0, pitch_in:3.2, blades:3, weight_g:1.7, material:'PC',
+      url:'https://www.gemfanhobby.com/3032-gemfan-pc-3-blade.html'
+    },
+    {
+      id:'gemfan_3525', model:'Gemfan 3525 Hurricane T-Mount',
+      diameter_in:3.5, pitch_in:2.5, blades:3, weight_g:1.75, material:'PC',
+      url:'https://www.gemfanhobby.com/3525-hurricane-pc-3-blade-t-mount.html'
+    }
+  ],
+
+  escs: [
+    {
+      id:'dys_xsd_7a', manufacturer:'DYS', model:'XSD 7A',
+      firmware:'BLHeli_S', protocols:['DShot600','DShot300','Multishot','OneShot125'],
+      voltage_max_s:2, continuous_a:7, peak_a:9, peak_dur_s:10,
+      weight_g:0.83,
+      url:'https://www.dys.hk/product/XSD%207A.html'
+    },
+    {
+      id:'dys_xsd_12a', manufacturer:'DYS', model:'XSD 12A',
+      firmware:'BLHeli_S', protocols:['DShot600','DShot300','Multishot','OneShot125'],
+      voltage_max_s:3, continuous_a:12, peak_a:15, peak_dur_s:10,
+      weight_g:1.0,
+      url:'https://www.dys.hk/product/XSD%2012A.html'
+    }
+  ],
+
+  fc: {
+    id:'crazyflie_bolt', manufacturer:'Bitcraze', model:'Crazyflie Bolt',
+    weight_g:9.2, voltage_min_v:3.0, voltage_max_v:17.0,
+    onboard_max_per_motor_a:8.0,
+    protocols:['PWM 400Hz','OneShot125'],
+    features:['STM32F405 168MHz','BMI088 IMU','BMP388 Baro','2.4GHz Radio + 20dBm PA','Bluetooth LE','4× ESC connectors'],
+    current_draw_a:0.25,
+    url:'https://www.bitcraze.io/products/crazyflie-bolt/'
+  },
+
+  addons: [
+    {
+      id:'bitcraze_flow_deck_v2', manufacturer:'Bitcraze', model:'Flow Deck v2',
+      type:'Positioning Deck',
+      weight_g:1.6, width_mm:21.0, length_mm:28.0, height_mm:4.0,
+      current_draw_a:0.04, voltage_v:3.0,
+      features:['VL53L1x ToF height sensor','PMW3901 optical flow','I2C + SPI deck header','Crazyflie Bolt ecosystem'],
+      url:'https://www.bitcraze.io/products/flow-deck-v2/'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+const state = {
+  battery: null,
+  motorId: null,
+  motorKv: null,
+  prop: null,
+  esc: null,
+  addonIds: [],
+  frameWeight: 30,
+  userPayload: 0
+};
+
+// ═══════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════
+function fmt(value, maxDecimals = 2) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return value;
+  return n.toLocaleString(undefined, {maximumFractionDigits:maxDecimals});
+}
+
+function propTorqueScore(prop) {
+  // Aerodynamic torque ∝ D^5 × pitch × blades (D in inches)
+  return Math.pow(prop.diameter_in, 5) * prop.pitch_in * prop.blades;
+}
+
+function getActiveMotorConfig() {
+  if (!state.motorId || state.motorKv == null) return null;
+  const motor = DB.motors.find(m => m.id === state.motorId);
+  return motor ? motor.configs.find(c => c.kv === state.motorKv) : null;
+}
+
+function getKvPreference(kv, cellKey) {
+  if (cellKey === '1s') {
+    if (kv >= 10000) return 'preferred';
+    if (kv >= 7000)  return 'acceptable';
+    return 'not-recommended';
+  }
+  // 2s
+  if (kv <= 8000)  return 'preferred';
+  if (kv <= 10000) return 'acceptable';
+  return 'not-recommended';
+}
+
+function motorStatorParts(motor) {
+  const match = motor.stator.match(/([\d.]+)\D+([\d.]+)/);
+  return {
+    diameter: match ? parseFloat(match[1]) : 0,
+    height: match ? parseFloat(match[2]) : 0
+  };
+}
+
+function groupBy(items, keyFn) {
+  return items.reduce((groups, item) => {
+    const key = keyFn(item);
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(item);
+    return groups;
+  }, {});
+}
+
+function getPropStatus(motorConfig, cellKey, prop) {
+  if (!motorConfig || !motorConfig.prop_ref) return {status:'unknown',label:'—',msg:'Select a motor first'};
+
+  const refId = motorConfig.prop_ref[cellKey];
+
+  if (!refId) {
+    if (cellKey === '2s' && motorConfig.kv >= 11500) {
+      return {status:'over',label:'Over-propped',msg:'Motor RPM too high at 2S — available props too large; a smaller prop (e.g. 2020 3-blade) is needed'};
+    }
+    return {status:'unknown',label:'No ref data',msg:'No reference prop data for this motor/voltage'};
+  }
+
+  const refProp = DB.props.find(p => p.id === refId);
+  if (!refProp) return {status:'unknown',label:'No ref',msg:''};
+
+  if (prop.id === refId) {
+    return {status:'optimal',label:'✓ Optimal',msg:`Matches bench-test prop · confirmed by manufacturer data`};
+  }
+
+  const score = propTorqueScore(prop);
+  const refScore = propTorqueScore(refProp);
+  const ratio = score / refScore;
+
+  if (ratio < 0.45) return {status:'under',label:'Under-propped',msg:`${(ratio*100).toFixed(0)}% of optimal load — motor over-revs, high bearing wear, poor efficiency`};
+  if (ratio < 0.72) return {status:'acceptable',label:'~ Acceptable',msg:`${(ratio*100).toFixed(0)}% of optimal — slightly under-propped, minor efficiency loss`};
+  if (ratio <= 1.40) return {status:'optimal',label:'✓ Good Match',msg:`${(ratio*100).toFixed(0)}% of optimal aerodynamic load — good fit`};
+  if (ratio <= 1.80) return {status:'acceptable',label:'~ Acceptable',msg:`${(ratio*100).toFixed(0)}% of optimal — slightly over-propped, monitor temps`};
+  return {status:'over',label:'Over-propped',msg:`${(ratio*100).toFixed(0)}% of optimal load — motor strains, excessive current, risk of overheating`};
+}
+
+function interpolateHover(bench, thrustPerMotor) {
+  const pts = [{t:0,thrust:0,current:0}, ...bench];
+  for (let i = 1; i < pts.length; i++) {
+    if (thrustPerMotor <= pts[i].thrust) {
+      const f = (thrustPerMotor - pts[i-1].thrust) / (pts[i].thrust - pts[i-1].thrust);
+      return {
+        throttle: pts[i-1].t + f * (pts[i].t - pts[i-1].t),
+        current:  pts[i-1].current + f * (pts[i].current - pts[i-1].current),
+        overloaded: false
+      };
+    }
+  }
+  return {throttle:100, current:pts[pts.length-1].current, overloaded:true};
+}
+
+function selectedAddons() {
+  return (DB.addons || []).filter(addon => state.addonIds.includes(addon.id));
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[ch]));
+}
+
+function csvCell(value) {
+  return `"${String(value ?? '').replace(/"/g, '""')}"`;
+}
+
+function batterySizeValue(battery) {
+  const text = `${battery.label} ${battery.model}`;
+  const match = text.match(/\b(18|21)\d{3}\b/);
+  return match ? parseInt(match[0], 10) : 0;
+}
+
+function bomRows() {
+  const rows = [];
+  const battery = state.battery ? DB.batteries.find(b => b.id === state.battery) : null;
+  const motor = state.motorId ? DB.motors.find(m => m.id === state.motorId) : null;
+  const prop = state.prop ? DB.props.find(p => p.id === state.prop) : null;
+  const esc = state.esc ? DB.escs.find(e => e.id === state.esc) : null;
+
+  if (battery) rows.push({category:'Battery', qty:1, name:`${battery.label} - ${battery.model}`, unitWeight:battery.weight_g, link:battery.url});
+  if (motor && state.motorKv != null) rows.push({category:'Motor', qty:4, name:`${motor.manufacturer} ${motor.model} ${state.motorKv} KV`, unitWeight:motor.weight_g, link:motor.url});
+  if (prop) rows.push({category:'Propeller', qty:4, name:prop.model, unitWeight:prop.weight_g, link:prop.url});
+  if (esc) rows.push({category:'ESC / Driver', qty:4, name:`${esc.manufacturer} ${esc.model}`, unitWeight:esc.weight_g, link:esc.url});
+
+  rows.push({category:'Flight Controller', qty:1, name:`${DB.fc.manufacturer} ${DB.fc.model}`, unitWeight:DB.fc.weight_g, link:DB.fc.url});
+  selectedAddons().forEach(addon => rows.push({
+    category:'Optional Add-on', qty:1, name:`${addon.manufacturer} ${addon.model}`,
+    unitWeight:addon.weight_g, link:addon.url
+  }));
+
+  return rows;
+}
+
+function exportBom() {
+  const rows = bomRows();
+  const total = rows.reduce((sum, row) => sum + row.qty * row.unitWeight, 0);
+  const header = ['Category','Component','Quantity','Unit Weight (g)','Total Weight (g)','Link'];
+  const csvRows = [
+    header,
+    ...rows.map(row => [
+      row.category,
+      row.name,
+      row.qty,
+      fmt(row.unitWeight),
+      fmt(row.qty * row.unitWeight),
+      row.link
+    ]),
+    ['BOM component weight','','','',fmt(total),'']
+  ];
+  const csv = csvRows.map(row => row.map(csvCell).join(',')).join('\r\n');
+
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `drone-designer-bom-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════════════
+//  CALCULATIONS
+// ═══════════════════════════════════════════════════
+function calcResults() {
+  if (!state.battery || !state.motorId || state.motorKv == null) return null;
+
+  const battery = DB.batteries.find(b => b.id === state.battery);
+  const motorData = DB.motors.find(m => m.id === state.motorId);
+  const mCfg = motorData.configs.find(c => c.kv === state.motorKv);
+  const prop = state.prop ? DB.props.find(p => p.id === state.prop) : null;
+  const esc  = state.esc  ? DB.escs.find(e => e.id === state.esc)   : null;
+  const fc   = DB.fc;
+  const addons = selectedAddons();
+  const ck   = battery.cell_key;
+  const bench = mCfg.bench[ck];
+
+  if (!bench) {
+    return {error:`No bench data for ${motorData.model} ${mCfg.kv}KV at ${ck.toUpperCase()} — motor not tested at this voltage`};
+  }
+
+  // ── Weights ──
+  const wMotor   = motorData.weight_g * 4;
+  const wProp    = prop ? prop.weight_g * 4 : 0;
+  const wEsc     = esc  ? esc.weight_g  * 4 : 0;
+  const wFc      = fc.weight_g;
+  const wAddons  = addons.reduce((sum, addon) => sum + addon.weight_g, 0);
+  const wBatt    = battery.weight_g;
+  const wFrame   = parseFloat(state.frameWeight)  || 0;
+  const wPayload = parseFloat(state.userPayload)   || 0;
+  const total    = wMotor + wProp + wEsc + wFc + wAddons + wBatt + wFrame + wPayload;
+
+  // ── Hover ──
+  const thrustPerMotor = total / 4;
+  const hov = interpolateHover(bench, thrustPerMotor);
+  const addonCurrent = addons.reduce((sum, addon) => sum + addon.current_draw_a, 0);
+  const totalHoverCurrent = hov.current * 4 + fc.current_draw_a + addonCurrent;
+  const pidHeadroom = Math.max(0, 100 - hov.throttle);
+
+  // ── Max thrust / TWR ──
+  const maxThrust = bench[bench.length - 1].thrust * 4;
+  const twr = maxThrust / total;
+
+  // ── Flight time (min) ──
+  // time_min = capacity_mAh × 0.8 × 60 / (current_A × 1000)
+  const flightTime = (battery.capacity_mah * 0.8 * 60) / (totalHoverCurrent * 1000);
+
+  // ── Warnings ──
+  const warnings = [];
+
+  if (total > 250)
+    warnings.push({lvl:'err', text:`Total weight ${fmt(total)} g exceeds the 250 g sub-250 limit`});
+  else if (total > 242)
+    warnings.push({lvl:'warn', text:`Weight ${fmt(total)} g — dangerously close to 250 g limit`});
+
+  if (hov.overloaded)
+    warnings.push({lvl:'err', text:`Insufficient thrust: 4 motors max = ${fmt(maxThrust)} g < ${fmt(total)} g required — cannot hover`});
+
+  if (!hov.overloaded) {
+    if (hov.throttle > 70)
+      warnings.push({lvl:'err', text:`Hover at ${hov.throttle.toFixed(0)}% throttle — only ${pidHeadroom.toFixed(0)}% headroom for PID, drone will be uncontrollable`});
+    else if (hov.throttle > 60)
+      warnings.push({lvl:'warn', text:`Hover at ${hov.throttle.toFixed(0)}% throttle — limited PID authority (${pidHeadroom.toFixed(0)}% headroom)`});
+  }
+
+  if (esc) {
+    if (battery.cells > esc.voltage_max_s)
+      warnings.push({lvl:'err', text:`Battery ${battery.cells}S exceeds ESC max ${esc.voltage_max_s}S — ESC will be destroyed`});
+    const peakPerMotor = bench[bench.length - 1].current;
+    if (peakPerMotor > esc.peak_a)
+      warnings.push({lvl:'err', text:`Motor peak ${fmt(peakPerMotor)} A > ESC peak ${fmt(esc.peak_a)} A — ESC will burn at full throttle`});
+    else if (peakPerMotor > esc.continuous_a)
+      warnings.push({lvl:'warn', text:`Motor max ${fmt(peakPerMotor)} A exceeds ESC continuous ${fmt(esc.continuous_a)} A — avoid sustained full throttle`});
+    if (!hov.overloaded && hov.current > esc.continuous_a * 0.88)
+      warnings.push({lvl:'warn', text:`Hover current ${fmt(hov.current)} A/motor near ESC continuous limit (${fmt(esc.continuous_a)} A)`});
+  }
+
+  const maxSysCurrent = bench[bench.length - 1].current * 4;
+  if (maxSysCurrent > battery.peak_a)
+    warnings.push({lvl:'err', text:`Peak motor draw ${fmt(maxSysCurrent)} A > battery peak ${fmt(battery.peak_a)} A`});
+  else if (maxSysCurrent > battery.max_continuous_a)
+    warnings.push({lvl:'warn', text:`Peak motor draw ${fmt(maxSysCurrent)} A exceeds battery continuous ${fmt(battery.max_continuous_a)} A`});
+
+  if (prop) {
+    const ps = getPropStatus(mCfg, ck, prop);
+    if (ps.status === 'over')
+      warnings.push({lvl:'err', text:`Over-propped: ${ps.msg}`});
+    else if (ps.status === 'under')
+      warnings.push({lvl:'warn', text:`Under-propped: ${ps.msg}`});
+  }
+
+  if (!hov.overloaded && pidHeadroom < 40 && pidHeadroom >= 30)
+    warnings.push({lvl:'info', text:`PID headroom ${pidHeadroom.toFixed(0)}% — acceptable but aggressive manoeuvres will clip`});
+
+  return {
+    total, wMotor, wProp, wEsc, wFc, wAddons, wBatt, wFrame, wPayload,
+    thrustPerMotor, hoverThrottle: hov.throttle,
+    hoverCurrentPerMotor: hov.current, totalHoverCurrent,
+    pidHeadroom, maxThrust, twr, flightTime,
+    warnings, overloaded: hov.overloaded, motorData, mCfg, battery
+  };
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — SIDEBAR
+// ═══════════════════════════════════════════════════
+const STEPS = [
+  {id:'s-battery',   num:1, label:'Battery',    sub:'Power source'},
+  {id:'s-motor',     num:2, label:'Motors',     sub:'Select + KV'},
+  {id:'s-prop',      num:3, label:'Propellers', sub:'Torque match'},
+  {id:'s-esc',       num:4, label:'Drivers',    sub:'ESC selection'},
+  {id:'s-fc',        num:5, label:'Electronics',sub:'Flight controller'},
+  {id:'s-build',     num:6, label:'Build Setup',sub:'Frame + payload'}
+];
+
+function isDone(stepId) {
+  if (stepId === 's-battery')  return !!state.battery;
+  if (stepId === 's-motor')    return !!state.motorId && state.motorKv != null;
+  if (stepId === 's-prop')     return !!state.prop;
+  if (stepId === 's-esc')      return !!state.esc;
+  if (stepId === 's-fc')       return true;
+  if (stepId === 's-build')    return true;
+  return false;
+}
+
+function renderSidebar() {
+  document.getElementById('sidebar').innerHTML = STEPS.map(s => {
+    const done   = isDone(s.id);
+    const active = document.querySelector('.section:is(:hover)'); // simple
+    return `<a class="step-link${done?' done':''}" href="#${s.id}">
+      <div class="snum">${done?'✓':s.num}</div>
+      <div class="stext"><strong>${s.label}</strong><span>${s.sub}</span></div>
+    </a>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — BATTERY STEP
+// ═══════════════════════════════════════════════════
+function renderBattery() {
+  const batteryGroups = groupBy(
+    [...DB.batteries].sort((a, b) =>
+      a.cells - b.cells || batterySizeValue(a) - batterySizeValue(b) || a.label.localeCompare(b.label)
+    ),
+    battery => `${battery.cells}s`
+  );
+  const batteryGroupHtml = Object.keys(batteryGroups).map(cellGroup => {
+    const cards = batteryGroups[cellGroup].map(b => `
+        <div class="card${state.battery===b.id?' selected':''}" onclick="selectBattery('${b.id}')">
+          <div class="sel-check">✓</div>
+          <div class="card-mfr">${b.manufacturer}</div>
+          <div class="card-name">${b.label} — ${b.model}</div>
+          <div class="card-sub">${b.subtitle}</div>
+          <div class="chips">
+            <span class="chip">${fmt(b.voltage_v)} V nominal</span>
+            <span class="chip chip-accent">${b.capacity_mah} mAh</span>
+            <span class="chip">${fmt(b.weight_g)} g</span>
+            <span class="chip">${fmt(b.max_continuous_a)} A cont.</span>
+            <span class="chip">${fmt(b.peak_a)} A peak</span>
+          </div>
+        </div>`).join('');
+    return `<div class="component-group">
+      <div class="component-group-title">${cellGroup.toUpperCase()} ${cellGroup === '1s' ? 'battery sizes' : 'battery configurations'}</div>
+      <div class="card-grid">${cards}</div>
+    </div>`;
+  }).join('');
+
+  return `<section class="section" id="s-battery">
+    <div class="sec-header">
+      <h2><div class="sec-num">1</div> Battery Selection</h2>
+      <p>Choose the cell format and count. This determines voltage, capacity, and which motors are optimal.</p>
+    </div>
+    ${batteryGroupHtml}
+  </section>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — MOTOR STEP
+// ═══════════════════════════════════════════════════
+function renderMotors() {
+  const battery = state.battery ? DB.batteries.find(b => b.id === state.battery) : null;
+
+  const hint = battery
+    ? (battery.cell_key === '1s'
+        ? 'At 1S (3.7 V) high-KV motors (≥10 000 KV) are preferred — low-KV motors lack RPM at 1S voltage.'
+        : 'At 2S (7.4 V) medium-KV motors (5 000–8 000 KV) are preferred — high-KV motors spin too fast for available props.')
+    : 'Select a battery first to see KV recommendations.';
+
+  const sortedMotors = [...DB.motors].sort((a, b) => {
+    const ap = motorStatorParts(a);
+    const bp = motorStatorParts(b);
+    return ap.diameter - bp.diameter || ap.height - bp.height || a.model.localeCompare(b.model);
+  });
+  const motorGroups = groupBy(sortedMotors, motor => motorStatorParts(motor).diameter);
+
+  const motorGroupHtml = Object.keys(motorGroups).map(diameter => {
+    const motorCards = motorGroups[diameter].map(motor => {
+    const kvRows = motor.configs.map(cfg => {
+      const hasBench = battery ? !!cfg.bench[battery.cell_key] : true;
+      const pref = battery ? getKvPreference(cfg.kv, battery.cell_key) : null;
+      const isSelected = state.motorId === motor.id && state.motorKv === cfg.kv;
+
+      const prefBadge = pref
+        ? `<span class="pref-badge pref-${pref}">${pref==='preferred'?'★ Preferred':pref==='acceptable'?'Acceptable':'Not Recommended'}</span>`
+        : '';
+      const noBenchNote = battery && !hasBench
+        ? `<span class="pref-badge pref-no-data">No bench data at ${battery.cell_key.toUpperCase()}</span>` : '';
+
+      return `<tr class="kv-radio-row${isSelected?' kv-selected':''}${battery&&!hasBench?' kv-disabled':''}"
+                  onclick="${battery&&!hasBench?'':'selectMotor(\''+motor.id+'\','+cfg.kv+')'}">
+        <td><input type="radio" name="motor" ${isSelected?'checked':''} ${battery&&!hasBench?'disabled':''}></td>
+        <td><strong>${cfg.kv.toLocaleString()} KV</strong></td>
+        <td style="color:var(--dim)">${cfg.target}</td>
+        <td>${fmt(cfg.max_current_a)} A max</td>
+        <td>${prefBadge}${noBenchNote}</td>
+      </tr>`;
+    }).join('');
+
+    const isMotorSelected = state.motorId === motor.id;
+    return `<div class="card card-grid-wide${isMotorSelected?' selected':''}">
+      <div class="sel-check">✓</div>
+      <div class="card-mfr">${motor.manufacturer}</div>
+      <div class="card-name">${motor.model}</div>
+      <div class="card-sub">Stator ${motor.stator} · ${fmt(motor.weight_g)} g · <a href="${motor.url}" target="_blank" onclick="event.stopPropagation()">datasheet ↗</a></div>
+      <table class="kv-table">${kvRows}</table>
+    </div>`;
+    }).join('');
+
+    return `<div class="component-group">
+      <div class="component-group-title">${fmt(diameter)} mm stator diameter</div>
+      <div class="card-grid-wide">${motorCards}</div>
+    </div>`;
+  }).join('');
+
+  return `<section class="section" id="s-motor">
+    <div class="sec-header">
+      <h2><div class="sec-num">2</div> Motor Selection</h2>
+      <p>Select a motor model, then choose a KV variant. KV preference is calculated from your battery voltage.</p>
+    </div>
+    <div class="hint-box">⚡ ${hint}</div>
+    ${motorGroupHtml}
+  </section>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — PROP STEP
+// ═══════════════════════════════════════════════════
+function renderProps() {
+  const battery = state.battery ? DB.batteries.find(b => b.id === state.battery) : null;
+  const mCfg    = getActiveMotorConfig();
+
+  const hint = !battery ? 'Select a battery to enable prop matching.' :
+               !mCfg    ? 'Select a motor and KV variant to see torque matching.' :
+               `Torque matching for ${DB.motors.find(m=>m.id===state.motorId).model} ${state.motorKv} KV at ${battery.cell_key.toUpperCase()} (${fmt(battery.voltage_v)} V).`;
+
+  const sortedProps = [...DB.props].sort((a, b) =>
+    a.diameter_in - b.diameter_in || a.pitch_in - b.pitch_in || a.blades - b.blades || a.model.localeCompare(b.model)
+  );
+  const propGroups = groupBy(sortedProps, prop => Math.floor(prop.diameter_in));
+
+  const propGroupHtml = Object.keys(propGroups).map(inchGroup => {
+    const propCards = propGroups[inchGroup].map(prop => {
+    const ps = mCfg && battery ? getPropStatus(mCfg, battery.cell_key, prop) : null;
+    const badgeClass = !ps ? '' :
+      ps.status === 'optimal'     ? 'prop-optimal' :
+      ps.status === 'acceptable'  ? 'prop-acceptable' :
+      ps.status === 'over'        ? 'prop-over' :
+      ps.status === 'under'       ? 'prop-under' : 'prop-unknown';
+
+    const badge = ps ? `<span class="prop-badge ${badgeClass}">${ps.label}</span>` : '';
+    const msg   = ps ? `<div class="prop-msg">${ps.msg}</div>` : '';
+
+    return `<div class="card${state.prop===prop.id?' selected':''}" onclick="selectProp('${prop.id}')">
+      <div class="sel-check">✓</div>
+      <div class="card-name">${prop.model}</div>
+      <div class="card-sub">${fmt(prop.diameter_in)}" dia · ${fmt(prop.pitch_in)}" pitch · ${prop.blades}-blade · ${prop.material} · <a href="${prop.url}" target="_blank" onclick="event.stopPropagation()">datasheet ↗</a></div>
+      <div class="chips">
+        <span class="chip">${fmt(prop.weight_g)} g/prop</span>
+        <span class="chip">${fmt(prop.weight_g*4)} g ×4</span>
+        <span class="chip chip-accent">${fmt(prop.diameter_in*25.4)}×${fmt(prop.pitch_in*25.4)} mm</span>
+      </div>
+      ${badge}${msg}
+    </div>`;
+    }).join('');
+
+    return `<div class="component-group">
+      <div class="component-group-title">${inchGroup}" prop options</div>
+      <div class="card-grid">${propCards}</div>
+    </div>`;
+  }).join('');
+
+  return `<section class="section" id="s-prop">
+    <div class="sec-header">
+      <h2><div class="sec-num">3</div> Propeller Selection</h2>
+      <p>Prop torque demand is scored as D⁵ × pitch × blades relative to bench-tested reference prop.</p>
+    </div>
+    <div class="hint-box">🌀 ${hint}</div>
+    ${propGroupHtml}
+  </section>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — ESC STEP
+// ═══════════════════════════════════════════════════
+function renderEsc() {
+  const battery = state.battery ? DB.batteries.find(b => b.id === state.battery) : null;
+  const mCfg = getActiveMotorConfig();
+
+  const escCards = DB.escs.map(esc => {
+    const voltOk  = !battery || battery.cells <= esc.voltage_max_s;
+    const peakOk  = !mCfg   || mCfg.bench[battery?.cell_key]?.[1]?.current <= esc.peak_a;
+    const contOk  = !mCfg   || mCfg.bench[battery?.cell_key]?.[1]?.current <= esc.continuous_a;
+
+    let compat = '';
+    if (battery && !voltOk)
+      compat = `<span class="prop-badge prop-over">⚠ Voltage too high for ${battery.cells}S</span>`;
+    else if (mCfg && battery && !peakOk) {
+      const benchPeak = mCfg.bench[battery.cell_key]?.[1]?.current;
+      compat = `<span class="prop-badge prop-over">⚠ Motor peak ${fmt(benchPeak)}A > ESC peak ${fmt(esc.peak_a)}A</span>`;
+    } else if (mCfg && battery && !contOk) {
+      const benchPeak = mCfg.bench[battery.cell_key]?.[1]?.current;
+      compat = `<span class="prop-badge prop-acceptable">⚠ Motor max ${fmt(benchPeak)}A > cont. ${fmt(esc.continuous_a)}A</span>`;
+    } else if (battery || mCfg) {
+      compat = `<span class="prop-badge prop-optimal">✓ Compatible</span>`;
+    }
+
+    return `<div class="card${state.esc===esc.id?' selected':''}${battery&&!voltOk?' disabled':''}" onclick="selectEsc('${esc.id}')">
+      <div class="sel-check">✓</div>
+      <div class="card-mfr">${esc.manufacturer}</div>
+      <div class="card-name">${esc.model}</div>
+      <div class="card-sub">${esc.firmware} · up to ${esc.voltage_max_s}S · ${fmt(esc.weight_g)} g each</div>
+      <div class="chips">
+        <span class="chip chip-accent">${fmt(esc.continuous_a)} A continuous</span>
+        <span class="chip">${fmt(esc.peak_a)} A peak (${fmt(esc.peak_dur_s)}s)</span>
+        <span class="chip">${fmt(esc.weight_g*4)} g ×4</span>
+      </div>
+      <div style="margin-top:8px">${esc.protocols.map(p=>`<span class="chip" style="margin:2px">${p}</span>`).join('')}</div>
+      <div style="margin-top:8px">${compat}</div>
+    </div>`;
+  }).join('');
+
+  return `<section class="section" id="s-esc">
+    <div class="sec-header">
+      <h2><div class="sec-num">4</div> ESC / Driver Selection</h2>
+      <p>Speed controllers must handle the motor's peak current and be rated for the battery voltage.</p>
+    </div>
+    <div class="card-grid esc-grid">${escCards}</div>
+  </section>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — ELECTRONICS (FC)
+// ═══════════════════════════════════════════════════
+function renderElectronics() {
+  const fc = DB.fc;
+  const addons = DB.addons || [];
+  return `<section class="section" id="s-fc">
+    <div class="sec-header">
+      <h2><div class="sec-num">5</div> Electronics — Flight Controller</h2>
+      <p>The Crazyflie Bolt is included automatically. Add-on decks are optional and update weight and power calculations when selected.</p>
+    </div>
+    <div class="fc-card">
+      <div class="card-mfr">${fc.manufacturer}</div>
+      <div class="card-name">${fc.model}</div>
+      <div class="card-sub">Autonomy platform · ${fmt(fc.weight_g)} g · <a href="${fc.url}" target="_blank">datasheet ↗</a></div>
+      <div class="chips">
+        <span class="chip chip-accent">${fmt(fc.weight_g)} g</span>
+        <span class="chip">${fmt(fc.voltage_min_v)}–${fmt(fc.voltage_max_v)} V input</span>
+        <span class="chip">${fmt(fc.onboard_max_per_motor_a)} A/ch onboard PDB</span>
+        <span class="chip">~${fmt(fc.current_draw_a)} A idle draw</span>
+      </div>
+      <div class="feature-list">
+        ${fc.features.map(f=>`<span class="feat-chip">${f}</span>`).join('')}
+      </div>
+      <div style="margin-top:10px;font-size:.75rem;color:var(--dim)">
+        Supports ${fc.protocols.join(', ')} · compatible with DYS XSD ESCs.
+        If any motor draws &gt;${fmt(fc.onboard_max_per_motor_a)} A, bypass the onboard PDB and route power externally through the ESCs.
+      </div>
+    </div>
+    <div class="card-grid" style="margin-top:12px">
+      ${addons.map(addon => {
+        const selected = state.addonIds.includes(addon.id);
+        return `
+        <div class="fc-card optional${selected?' selected':''}" onclick="toggleAddon('${addon.id}')">
+          <div class="sel-check">✓</div>
+          <div class="card-mfr">${addon.manufacturer}</div>
+          <div class="card-name">${addon.model}</div>
+          <div class="card-sub">${addon.type} · ${fmt(addon.weight_g)} g · <a href="${addon.url}" target="_blank" onclick="event.stopPropagation()">datasheet ↗</a></div>
+          <div class="chips">
+            <span class="chip chip-accent">${fmt(addon.weight_g)} g</span>
+            <span class="chip">${fmt(addon.width_mm)}×${fmt(addon.length_mm)}×${fmt(addon.height_mm)} mm</span>
+            <span class="chip">${fmt(addon.voltage_v)} V</span>
+            <span class="chip">~${fmt(addon.current_draw_a * 1000)} mA</span>
+          </div>
+          <div class="feature-list">
+            ${addon.features.map(f=>`<span class="feat-chip">${f}</span>`).join('')}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </section>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — BUILD SETUP
+// ═══════════════════════════════════════════════════
+function renderBuild() {
+  return `<section class="section" id="s-build">
+    <div class="sec-header">
+      <h2><div class="sec-num">6</div> Build Setup</h2>
+      <p>Enter frame and any additional payload weight. All values feed directly into the weight and performance calculations.</p>
+    </div>
+    <div class="input-row">
+      <div class="input-grp">
+        <label>Frame Weight (g)</label>
+        <input type="number" id="frameWt" value="${state.frameWeight}" min="0" max="200" step="0.5"
+               oninput="state.frameWeight=this.value;updateResults()">
+        <div class="input-unit">Typical 2.5" frame: 12–18 g · 3" frame: 18–30 g</div>
+      </div>
+      <div class="input-grp">
+        <label>User Payload (g)</label>
+        <input type="number" id="payloadWt" value="${state.userPayload}" min="0" max="200" step="0.5"
+               oninput="state.userPayload=this.value;updateResults()">
+        <div class="input-unit">Camera, sensors, extra hardware, etc.</div>
+      </div>
+    </div>
+  </section>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — RESULTS PANEL
+// ═══════════════════════════════════════════════════
+function renderResults() {
+  const R = calcResults();
+  const el = document.getElementById('results');
+
+  if (!R) {
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:10px;height:100%">
+      <button class="bom-btn" onclick="exportBom()">BOM Export</button>
+      <div style="color:var(--dim);font-size:.85rem">
+        Select <strong>Battery</strong> and <strong>Motor</strong> to see performance estimates.
+      </div>
+    </div>`;
+    return;
+  }
+
+  if (R.error) {
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:10px;height:100%;flex-wrap:wrap">
+      <button class="bom-btn" onclick="exportBom()">BOM Export</button>
+      <div class="warn-chip warn-err" style="font-size:.82rem">⚠ ${R.error}</div>
+    </div>`;
+    return;
+  }
+
+  // Weight colour
+  const wPct = R.total / 250 * 100;
+  const wColour = R.total > 250 ? 'err' : R.total > 242 ? 'warn' : 'ok';
+  const wBarColor = R.total > 250 ? 'var(--err)' : R.total > 242 ? 'var(--warn)' : 'var(--ok)';
+
+  // Throttle colour
+  const tColour = R.overloaded ? 'err' : R.hoverThrottle > 70 ? 'err' : R.hoverThrottle > 60 ? 'warn' : 'ok';
+  const tBarColor = R.overloaded ? 'var(--err)' : R.hoverThrottle > 70 ? 'var(--err)' : R.hoverThrottle > 60 ? 'var(--warn)' : 'var(--ok)';
+
+  // TWR colour
+  const twrColour = R.twr > 3 ? 'ok' : R.twr > 2 ? 'warn' : 'err';
+
+  // Flight time colour
+  const ftColour = R.flightTime > 10 ? 'ok' : R.flightTime > 5 ? 'warn' : 'err';
+
+  const warnings = R.warnings.length === 0
+    ? `<span class="warn-ok">✓ No issues detected</span>`
+    : R.warnings.map(w => {
+        const cls = w.lvl === 'err' ? 'warn-err' : w.lvl === 'warn' ? 'warn-warn' : 'warn-info';
+        const dot = w.lvl === 'err' ? 'warn-dot-err' : w.lvl === 'warn' ? 'warn-dot-warn' : 'warn-dot-info';
+        return `<div class="warn-chip ${cls}"><div class="warn-dot ${dot}"></div>${w.text}</div>`;
+      }).join('');
+
+  // Weight breakdown
+  const hasAll = state.esc && state.prop;
+  const wbRows = [
+    ['Battery', R.wBatt],
+    ['Motors ×4', R.wMotor],
+    state.prop ? ['Props ×4', R.wProp] : null,
+    state.esc  ? ['ESC ×4', R.wEsc] : null,
+    ['FC', R.wFc],
+    R.wAddons > 0 ? ['Add-ons', R.wAddons] : null,
+    ['Frame', R.wFrame],
+    R.wPayload > 0 ? ['Payload', R.wPayload] : null
+  ].filter(Boolean);
+
+  const wbHtml = wbRows.map(([l,v]) =>
+    `<div class="wb-row"><span class="wb-label">${l}</span><span class="wb-val">${fmt(v)} g</span></div>`
+  ).join('') + `<hr class="wb-divider">
+  <div class="wb-row wb-total"><span class="wb-label">Total</span><span class="wb-val">${fmt(R.total)} g / 250 g</span></div>`;
+
+  el.innerHTML = `
+    <div class="res-row">
+      <div class="res-metric">
+        <div class="res-label">Total Weight</div>
+        <div class="res-value ${wColour}">${fmt(R.total)}<span style="font-size:.85rem;font-weight:500"> g</span></div>
+        <div class="res-sub">Limit: 250 g · ${fmt(250-R.total)} g remaining</div>
+        <div class="res-bar"><div class="res-bar-fill" style="width:${Math.min(wPct,100)}%;background:${wBarColor}"></div></div>
+      </div>
+
+      <div class="res-metric">
+        <div class="res-label">Hover Throttle</div>
+        <div class="res-value ${tColour}">${R.overloaded ? 'N/A' : R.hoverThrottle.toFixed(0)+'%'}</div>
+        <div class="res-sub">PID headroom: ${R.overloaded ? '—' : R.pidHeadroom.toFixed(0)+'%'} · ideal hover ≤ 55%</div>
+        <div class="res-bar">
+          <div style="display:flex;height:100%">
+            <div style="width:${Math.min(R.hoverThrottle,100)}%;background:${tBarColor};border-radius:3px;transition:width .4s"></div>
+            <div style="flex:1;background:var(--ok);opacity:.3;border-radius:3px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="res-metric">
+        <div class="res-label">Thrust / Weight</div>
+        <div class="res-value ${twrColour}">${fmt(R.twr)}×</div>
+        <div class="res-sub">Max thrust ${fmt(R.maxThrust)} g · hover needs ${fmt(R.total)} g</div>
+        <div class="res-bar"><div class="res-bar-fill" style="width:${Math.min(R.twr/5*100,100)}%;background:var(--accent2)"></div></div>
+      </div>
+
+      <div class="res-metric">
+        <div class="res-label">Est. Hover Flight Time</div>
+        <div class="res-value ${ftColour}">${R.overloaded ? '—' : fmt(R.flightTime)}<span style="font-size:.85rem;font-weight:500"> min</span></div>
+        <div class="res-sub">${R.battery.capacity_mah} mAh · ${fmt(R.totalHoverCurrent)} A total · 80% capacity used</div>
+        <div class="res-bar"><div class="res-bar-fill" style="width:${Math.min(R.flightTime/30*100,100)}%;background:var(--accent)"></div></div>
+      </div>
+
+      <div class="weight-col">
+        <div class="res-label" style="margin-bottom:8px">Weight Breakdown</div>
+        ${wbHtml}
+      </div>
+    </div>
+
+    <div class="warnings-row"><button class="bom-btn" onclick="exportBom()">BOM Export</button>${warnings}</div>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  EVENT HANDLERS
+// ═══════════════════════════════════════════════════
+function selectBattery(id) {
+  const prev = state.battery;
+  state.battery = id;
+  // Clear motor if the previously selected KV has no bench data for new battery
+  if (state.motorId && state.motorKv != null) {
+    const mData = DB.motors.find(m => m.id === state.motorId);
+    const cfg = mData.configs.find(c => c.kv === state.motorKv);
+    const newBatt = DB.batteries.find(b => b.id === id);
+    if (!cfg.bench[newBatt.cell_key]) {
+      state.motorKv = null;
+    }
+  }
+  renderAll();
+}
+
+function selectMotor(motorId, kv) {
+  state.motorId = motorId;
+  state.motorKv = kv;
+  renderAll();
+}
+
+function selectProp(id) {
+  state.prop = (state.prop === id) ? null : id;
+  updateResults();
+  renderSidebar();
+  // Just update prop step badges without full re-render
+  const propSection = document.getElementById('s-prop');
+  if (propSection) {
+    propSection.querySelectorAll('.card').forEach(card => {
+      const pid = card.getAttribute('onclick')?.match(/'(.*?)'/)?.[1];
+      if (pid) {
+        card.classList.toggle('selected', state.prop === pid);
+        const check = card.querySelector('.sel-check');
+        if (check) check.style.display = state.prop === pid ? 'flex' : 'none';
+      }
+    });
+  }
+}
+
+function selectEsc(id) {
+  state.esc = (state.esc === id) ? null : id;
+  updateResults();
+  renderSidebar();
+  document.querySelectorAll('#s-esc .card').forEach(card => {
+    const eid = card.getAttribute('onclick')?.match(/'(.*?)'/)?.[1];
+    if (eid) {
+      card.classList.toggle('selected', state.esc === eid);
+      const check = card.querySelector('.sel-check');
+      if (check) check.style.display = state.esc === eid ? 'flex' : 'none';
+    }
+  });
+}
+
+function toggleAddon(id) {
+  state.addonIds = state.addonIds.includes(id)
+    ? state.addonIds.filter(addonId => addonId !== id)
+    : [...state.addonIds, id];
+  updateResults();
+  renderSidebar();
+  document.querySelectorAll('#s-fc .fc-card.optional').forEach(card => {
+    const addonId = card.getAttribute('onclick')?.match(/'(.*?)'/)?.[1];
+    if (addonId) card.classList.toggle('selected', state.addonIds.includes(addonId));
+  });
+}
+
+function updateResults() {
+  renderResults();
+}
+
+function renderAll() {
+  const main = document.getElementById('main');
+  main.innerHTML = [
+    renderBattery(),
+    renderMotors(),
+    renderProps(),
+    renderEsc(),
+    renderElectronics(),
+    renderBuild()
+  ].join('<div class="divider"></div>');
+
+  renderSidebar();
+  renderResults();
+
+  // Re-attach input listeners after rebuild
+  const fw = document.getElementById('frameWt');
+  const pw = document.getElementById('payloadWt');
+  if (fw) fw.addEventListener('input', () => { state.frameWeight = fw.value; updateResults(); });
+  if (pw) pw.addEventListener('input', () => { state.userPayload = pw.value; updateResults(); });
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', renderAll);
+</script>
+</body>
+</html>
