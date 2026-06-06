@@ -26,6 +26,21 @@ The next step is control: students learn how to stabilize a fixed drone setup. T
 
 [BOM List](https://docs.google.com/spreadsheets/d/e/2PACX-1vT2DtydTzekY1mokOnh3ZIie18SPq6R37-j9ZMFiFX3chI8BBx9N6xgQAwgINsrMxRPPAHhBhgmAgD4/pubhtml)
 
+### 3D Files
+
+Printable Ver 1 STL files:
+
+- [MainBody.stl](3dFiles/1S_Drone_Ver1/MainBody.stl)
+- [TopCover.stl](3dFiles/1S_Drone_Ver1/TopCover.stl)
+- [LandingFeet.stl](3dFiles/1S_Drone_Ver1/LandingFeet.stl)
+- [Antenna.stl](3dFiles/1S_Drone_Ver1/Antenna.stl)
+- [MiniCameraHolder.stl](3dFiles/1S_Drone_Ver1/MiniCameraHolder.stl)
+- [StandOff.stl](3dFiles/1S_Drone_Ver1/StandOff.stl)
+
+Fusion 360 model:
+
+[Fusion 360 Model](https://a360.co/3Q0122c)
+
 The landing page includes a thumbnail of the drone. Selecting the thumbnail opens the full-size image.
 
 ## Educational Flow
@@ -36,7 +51,7 @@ The landing page includes a thumbnail of the drone. Selecting the thumbnail open
 4. Measure thrust versus current for motor and propeller combinations.
 5. Compare measured propulsion data with design assumptions.
 6. Stabilize a fixed drone on the lab rig.
-7. Practice controlled maneuvering around the single free rotational axis.
+7. Practice controlled maneuvering in a protecteed enviroment.
 
 ## Running Locally
 
