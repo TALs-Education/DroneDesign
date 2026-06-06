@@ -41,8 +41,6 @@ Fusion 360 model:
 
 [Fusion 360 Model](https://a360.co/3Q0122c)
 
-The landing page includes a thumbnail of the drone. Selecting the thumbnail opens the full-size image.
-
 ## Educational Flow
 
 1. Explore alternative drone designs in the web designer.
@@ -52,10 +50,6 @@ The landing page includes a thumbnail of the drone. Selecting the thumbnail open
 5. Compare measured propulsion data with design assumptions.
 6. Stabilize a fixed drone on the lab rig.
 7. Practice controlled maneuvering in a protecteed enviroment.
-
-## Running Locally
-
-This is a static site. Open `index.html` in a browser, then follow the link to `DroneDesigner.html`.
 
 ## License
 
