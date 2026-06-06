@@ -156,6 +156,26 @@ header{
 .prop-unknown{background:var(--surf3);color:var(--dim);border:1px solid var(--border)}
 .prop-msg{font-size:.7rem;color:var(--dim);margin-top:5px;line-height:1.4}
 
+/* ── TORQUE ALERT BANNER ─────────────────────── */
+.torque-alert{
+  display:flex;align-items:flex-start;gap:10px;
+  border-radius:var(--r);padding:12px 14px;
+  font-size:.82rem;font-weight:600;line-height:1.5;
+  margin-bottom:14px;
+}
+.torque-alert strong{font-weight:900}
+.torque-icon{font-size:1.15rem;flex-shrink:0;line-height:1.3}
+.alert-over{
+  background:rgba(255,77,109,.1);
+  border:1.5px solid rgba(255,77,109,.4);
+  color:var(--err);
+}
+.alert-under{
+  background:rgba(123,159,255,.1);
+  border:1.5px solid rgba(123,159,255,.35);
+  color:var(--info);
+}
+
 /* ── KV VARIANT TABLE ─────────────────────────── */
 .kv-table{width:100%;border-collapse:collapse;margin-top:8px}
 .kv-table td{padding:5px 6px;font-size:.75rem;vertical-align:middle}
@@ -335,6 +355,13 @@ const DB = {
       cells:2, voltage_v:7.4, capacity_mah:3000, weight_g:96,
       max_continuous_a:36, peak_a:60, cell_key:'2s',
       url:'https://www.molicel.com/inr-18650-p30b/'
+    },
+    {
+      id:'p50b_2s', manufacturer:'Molicel', model:'INR-21700-P50B ×2',
+      label:'2S 21700', subtitle:'High capacity · Heavier pack',
+      cells:2, voltage_v:7.4, capacity_mah:5000, weight_g:140,
+      max_continuous_a:50, peak_a:100, cell_key:'2s',
+      url:'https://www.molicel.com/inr-21700-p50b/'
     }
   ],
 
@@ -498,6 +525,11 @@ const DB = {
     },
     {
       id:'gemfan_2826', model:'Gemfan 2826 Drone Soccer',
+      diameter_in:2.8, pitch_in:2.4, blades:3, weight_g:1.47, material:'PC',
+      url:'https://www.gemfanhobby.com/2826-drone-soccer-pc-3-blade.html'
+    },
+    {
+      id:'gemfan_2826_standalone', model:'Gemfan 2826 Drone Soccer Standalone',
       diameter_in:2.8, pitch_in:2.6, blades:3, weight_g:1.47, material:'PC',
       url:'https://www.gemfanhobby.com/2826-drone-soccer-pc-3-blade.html'
     },
@@ -1030,12 +1062,33 @@ function renderProps() {
     </div>`;
   }).join('');
 
+  // Inline alert when the currently selected prop is mismatched to the motor
+  let torqueAlertHtml = '';
+  if (state.prop && mCfg && battery) {
+    const selProp = DB.props.find(p => p.id === state.prop);
+    if (selProp) {
+      const ps = getPropStatus(mCfg, battery.cell_key, selProp);
+      if (ps.status === 'over') {
+        torqueAlertHtml = `<div class="torque-alert alert-over">
+          <span class="torque-icon">⚠</span>
+          <div><strong>Over-propped:</strong> ${escapeHtml(selProp.model)} exceeds this motor's optimal torque load at ${battery.cell_key.toUpperCase()}. ${escapeHtml(ps.msg)} — motor will draw excessive current and may overheat. Select a smaller or lower-pitch prop.</div>
+        </div>`;
+      } else if (ps.status === 'under') {
+        torqueAlertHtml = `<div class="torque-alert alert-under">
+          <span class="torque-icon">ℹ</span>
+          <div><strong>Under-propped:</strong> ${escapeHtml(selProp.model)} under-loads this motor at ${battery.cell_key.toUpperCase()}. ${escapeHtml(ps.msg)} — select a larger or higher-pitch prop for better efficiency.</div>
+        </div>`;
+      }
+    }
+  }
+
   return `<section class="section" id="s-prop">
     <div class="sec-header">
       <h2><div class="sec-num">3</div> Propeller Selection</h2>
       <p>Prop torque demand is scored as D⁵ × pitch × blades relative to bench-tested reference prop.</p>
     </div>
     <div class="hint-box">🌀 ${hint}</div>
+    ${torqueAlertHtml}
     ${propGroupHtml}
   </section>`;
 }
@@ -1049,17 +1102,17 @@ function renderEsc() {
 
   const escCards = DB.escs.map(esc => {
     const voltOk  = !battery || battery.cells <= esc.voltage_max_s;
-    const peakOk  = !mCfg   || mCfg.bench[battery?.cell_key]?.[1]?.current <= esc.peak_a;
-    const contOk  = !mCfg   || mCfg.bench[battery?.cell_key]?.[1]?.current <= esc.continuous_a;
+    const peakOk  = !mCfg   || mCfg.bench[battery?.cell_key]?.at(-1)?.current <= esc.peak_a;
+    const contOk  = !mCfg   || mCfg.bench[battery?.cell_key]?.at(-1)?.current <= esc.continuous_a;
 
     let compat = '';
     if (battery && !voltOk)
       compat = `<span class="prop-badge prop-over">⚠ Voltage too high for ${battery.cells}S</span>`;
     else if (mCfg && battery && !peakOk) {
-      const benchPeak = mCfg.bench[battery.cell_key]?.[1]?.current;
+      const benchPeak = mCfg.bench[battery.cell_key]?.at(-1)?.current;
       compat = `<span class="prop-badge prop-over">⚠ Motor peak ${fmt(benchPeak)}A > ESC peak ${fmt(esc.peak_a)}A</span>`;
     } else if (mCfg && battery && !contOk) {
-      const benchPeak = mCfg.bench[battery.cell_key]?.[1]?.current;
+      const benchPeak = mCfg.bench[battery.cell_key]?.at(-1)?.current;
       compat = `<span class="prop-badge prop-acceptable">⚠ Motor max ${fmt(benchPeak)}A > cont. ${fmt(esc.continuous_a)}A</span>`;
     } else if (battery || mCfg) {
       compat = `<span class="prop-badge prop-optimal">✓ Compatible</span>`;
