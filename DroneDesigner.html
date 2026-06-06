@@ -529,6 +529,11 @@ const DB = {
       url:'https://www.gemfanhobby.com/2826-drone-soccer-pc-3-blade.html'
     },
     {
+      id:'gemfan_f3015', model:'Gemfan F3015 Floppy Proppy',
+      diameter_in:3.0, pitch_in:1.5, blades:3, weight_g:1.4, material:'PC folding',
+      url:'https://www.gemfanhobby.com/f3015-floppy-proppy-3-blade.html'
+    },
+    {
       id:'gemfan_3018', model:'Gemfan 3018 Hurricane',
       diameter_in:3.0, pitch_in:1.8, blades:2, weight_g:0.83, material:'PC',
       url:'https://www.gemfanhobby.com/3018-hurricane-pc-2-blade.html'
@@ -1021,12 +1026,21 @@ function renderProps() {
                !mCfg    ? 'Select a motor and KV variant to see torque matching.' :
                `Torque matching for ${DB.motors.find(m=>m.id===state.motorId).model} ${state.motorKv} KV at ${battery.cell_key.toUpperCase()} (${fmt(battery.voltage_v)} V).`;
 
+  const propOrder = prop => {
+    if (prop.id === 'gemfan_3018') return 0;
+    if (prop.id === 'gemfan_f3015') return 1;
+    return 10;
+  };
   const sortedProps = [...DB.props].sort((a, b) =>
-    a.diameter_in - b.diameter_in || a.pitch_in - b.pitch_in || a.blades - b.blades || a.model.localeCompare(b.model)
+    a.diameter_in - b.diameter_in ||
+    (a.diameter_in === 3.0 ? propOrder(a) - propOrder(b) : 0) ||
+    a.pitch_in - b.pitch_in ||
+    a.blades - b.blades ||
+    a.model.localeCompare(b.model)
   );
-  const propGroups = groupBy(sortedProps, prop => Math.floor(prop.diameter_in));
+  const propGroups = groupBy(sortedProps, prop => prop.diameter_in);
 
-  const propGroupHtml = Object.keys(propGroups).map(inchGroup => {
+  const propGroupHtml = Object.keys(propGroups).sort((a, b) => parseFloat(a) - parseFloat(b)).map(inchGroup => {
     const propCards = propGroups[inchGroup].map(prop => {
     const ps = mCfg && battery ? getPropStatus(mCfg, battery.cell_key, prop) : null;
     const badgeClass = !ps ? '' :

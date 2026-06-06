@@ -1,0 +1,19 @@
+{
+    "model": "F3015 Floppy Proppy",
+    "manufacturer": "Gemfan",
+    "type": "Folding Propeller (Floppy Proppy Series)",
+    "size_inch": 3.0,
+    "pitch_inch": 1.5,
+    "num_blades": 3,
+    "weight_g_per_prop_hub_assembly": 1.4,
+    "material": "Polycarbonate",
+    "hub_thickness_mm": 5.0,
+    "shaft_diameter_mm": "1.5mm / T-mount standard",
+    "suggested_motors": [
+        "1106",
+        "1204",
+        "1303",
+        "1404"
+    ],
+    "url": "https://www.gemfanhobby.com/f3015-floppy-proppy-3-blade.html"
+}

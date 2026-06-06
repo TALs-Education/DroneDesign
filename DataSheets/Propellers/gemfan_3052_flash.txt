@@ -1,0 +1,16 @@
+{
+    "model": "3052 Flash",
+    "manufacturer": "Gemfan",
+    "size_inch": 3.0,
+    "pitch_inch": 5.2,
+    "num_blades": 3,
+    "weight_g_per_prop": 1.65,
+    "material": "Polycarbonate",
+    "suggested_motors": [
+        "1306",
+        "1404",
+        "1408",
+        "1506"
+    ],
+    "url": "https://www.gemfanhobby.com/3052-flash-pc-3-blade.html"
+}
