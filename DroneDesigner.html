@@ -224,7 +224,7 @@ input[type=radio]{accent-color:var(--accent)}
   padding:14px 28px;position:sticky;bottom:0;z-index:150;
   display:flex;flex-direction:column;gap:10px;
 }
-.res-row{display:flex;gap:12px;flex:1}
+.res-row{display:flex;gap:12px;flex:1 1 auto;min-height:0}
 .res-metric{
   flex:1;background:var(--surf2);border:1px solid var(--border);
   border-radius:var(--r);padding:10px 14px;min-width:120px;
@@ -251,7 +251,7 @@ input[type=radio]{accent-color:var(--accent)}
 .wb-total .wb-val{color:var(--accent)}
 
 /* Warnings bar */
-.warnings-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;min-height:28px}
+.warnings-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;min-height:28px;max-height:64px;overflow-y:auto;flex-shrink:0}
 .warn-chip{
   display:flex;align-items:center;gap:5px;
   border-radius:var(--r-sm);padding:4px 10px;font-size:.72rem;font-weight:700;
@@ -271,6 +271,22 @@ input[type=radio]{accent-color:var(--accent)}
 }
 .bom-btn:hover{filter:brightness(1.08)}
 .bom-btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+
+/* ── PAYLOAD SWEEP / MODEL ───────────────────── */
+.sweep-summary{font-size:.82rem;margin:18px 0 8px}
+.sweep-summary strong{color:var(--accent)}
+.sweep-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)}
+.sweep-table{width:100%;border-collapse:collapse;font-size:.75rem;font-variant-numeric:tabular-nums}
+.sweep-table th{color:var(--dim);font-weight:800;text-align:right;padding:6px 10px;background:var(--surf2);white-space:nowrap}
+.sweep-table td{padding:5px 10px;text-align:right;border-top:1px solid var(--border);white-space:nowrap}
+.sweep-table th:last-child,.sweep-table td:last-child{text-align:left;white-space:normal}
+.sweep-table tr.current td{background:rgba(78,158,255,.08)}
+.sweep-ok{color:var(--ok)}.sweep-warn{color:var(--warn)}.sweep-err{color:var(--err)}
+.model-box{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;font-size:.8rem;line-height:1.6}
+.model-box h3{font-size:.82rem;margin:12px 0 4px}
+.model-box h3:first-child{margin-top:0}
+.model-box code{background:var(--surf3);border-radius:4px;padding:1px 6px;font-size:.78rem}
+.model-box ul{margin-left:18px}
 
 /* ── MISC ─────────────────────────────────────── */
 .divider{height:1px;background:var(--border);margin:28px 0}
@@ -338,28 +354,28 @@ const DB = {
     {
       id:'p50b_1s', manufacturer:'Molicel', model:'INR-21700-P50B',
       label:'1S 21700', subtitle:'High capacity · High discharge',
-      cells:1, voltage_v:3.7, capacity_mah:5000, weight_g:70,
+      cells:1, voltage_v:3.6, capacity_mah:5000, weight_g:70,
       max_continuous_a:50, peak_a:100, cell_key:'1s',
       url:'https://www.molicel.com/inr-21700-p50b/'
     },
     {
       id:'p30b_1s', manufacturer:'Molicel', model:'INR-18650-P30B',
       label:'1S 18650', subtitle:'Lightweight · Moderate capacity',
-      cells:1, voltage_v:3.7, capacity_mah:3000, weight_g:48,
+      cells:1, voltage_v:3.6, capacity_mah:3000, weight_g:48,
       max_continuous_a:36, peak_a:60, cell_key:'1s',
       url:'https://www.molicel.com/inr-18650-p30b/'
     },
     {
       id:'p30b_2s', manufacturer:'Molicel', model:'INR-18650-P30B ×2',
       label:'2S 18650', subtitle:'Higher voltage · More motor options',
-      cells:2, voltage_v:7.4, capacity_mah:3000, weight_g:96,
+      cells:2, voltage_v:7.2, capacity_mah:3000, weight_g:96,
       max_continuous_a:36, peak_a:60, cell_key:'2s',
       url:'https://www.molicel.com/inr-18650-p30b/'
     },
     {
       id:'p50b_2s', manufacturer:'Molicel', model:'INR-21700-P50B ×2',
       label:'2S 21700', subtitle:'High capacity · Heavier pack',
-      cells:2, voltage_v:7.4, capacity_mah:5000, weight_g:140,
+      cells:2, voltage_v:7.2, capacity_mah:5000, weight_g:140,
       max_continuous_a:50, peak_a:100, cell_key:'2s',
       url:'https://www.molicel.com/inr-21700-p50b/'
     }
@@ -369,7 +385,7 @@ const DB = {
     {
       id:'flywoo_robo_1202_5', manufacturer:'Flywoo', model:'ROBO 1202.5',
       stator:'12×2.5 mm', weight_g:3.8,
-      url:'https://flywoo.net/products/flywoo-robo-1202.5-11500kv-fpv-motor',
+      url:'https://flywoo.net/products/flywoo-robo-1202.5-11500kv-fpv-motor-gold-purple-new-version-',
       configs:[
         {
           kv:11500, target:'1S – 2S', max_current_a:14.2, max_power_w:105, ir_mohm:115,
@@ -377,7 +393,10 @@ const DB = {
             '1s':[{t:50,thrust:46,current:2.4},{t:100,thrust:102,current:6.9}],
             '2s':[{t:50,thrust:110,current:4.9},{t:100,thrust:224,current:13.8}]
           },
-          prop_ref:{'1s':'gemfan_2520','2s':null}
+          prop_ref:{
+            '1s':{id:'gemfan_2520', source:'datasheet'},
+            '2s':{model:'Gemfan 2020 3-blade', diameter_in:2.0, pitch_in:2.0, blades:3, source:'datasheet'}
+          }
         }
       ]
     },
@@ -392,14 +411,17 @@ const DB = {
             '1s':[{t:50,thrust:42,current:2.1},{t:100,thrust:98,current:6.2}],
             '2s':[{t:50,thrust:105,current:4.5},{t:100,thrust:215,current:12.8}]
           },
-          prop_ref:{'1s':'gemfan_2520','2s':null}
+          prop_ref:{
+            '1s':{id:'gemfan_2520', source:'assumed'},
+            '2s':{model:'Gemfan 2020 3-blade', diameter_in:2.0, pitch_in:2.0, blades:3, source:'assumed'}
+          }
         },
         {
           kv:8000, target:'2S – 3S', max_current_a:9.6, max_power_w:106.6, ir_mohm:167,
           bench:{
             '2s':[{t:50,thrust:82,current:2.8},{t:100,thrust:165,current:7.8}]
           },
-          prop_ref:{'2s':'gemfan_2520'}
+          prop_ref:{'2s':{id:'gemfan_2520', source:'assumed'}}
         }
       ]
     },
@@ -414,14 +436,17 @@ const DB = {
             '1s':[{t:50,thrust:45,current:2.3},{t:100,thrust:100,current:6.7}],
             '2s':[{t:50,thrust:108,current:4.7},{t:100,thrust:218,current:13.4}]
           },
-          prop_ref:{'1s':'gemfan_2520','2s':null}
+          prop_ref:{
+            '1s':{id:'gemfan_2520', source:'datasheet'},
+            '2s':{model:'Gemfan 2020 3-blade', diameter_in:2.0, pitch_in:2.0, blades:3, source:'datasheet'}
+          }
         },
         {
           kv:6000, target:'2S - 4S', max_current_a:9.2, max_power_w:136.0, ir_mohm:160,
           bench:{
             '2s':[{t:50,thrust:80,current:1.9},{t:100,thrust:185,current:8.1}]
           },
-          prop_ref:{'2s':'gemfan_3018'}
+          prop_ref:{'2s':{id:'gemfan_3018', source:'datasheet'}}
         }
       ]
     },
@@ -435,14 +460,14 @@ const DB = {
           bench:{
             '2s':[{t:50,thrust:102,current:3.4},{t:100,thrust:265,current:13.9}]
           },
-          prop_ref:{'2s':'gemfan_2520'}
+          prop_ref:{'2s':{id:'gemfan_2520', source:'datasheet'}}
         },
         {
           kv:5000, target:'2S - 3S', max_current_a:11.8, max_power_w:140.0, ir_mohm:155,
           bench:{
             '2s':[{t:50,thrust:92,current:2.3},{t:100,thrust:210,current:9.8}]
           },
-          prop_ref:{'2s':'gemfan_3018'}
+          prop_ref:{'2s':{id:'gemfan_3018', source:'datasheet'}}
         }
       ]
     },
@@ -457,21 +482,24 @@ const DB = {
             '1s':[{t:50,thrust:78,current:4.1},{t:100,thrust:221,current:13.8}],
             '2s':[{t:50,thrust:138,current:5.1},{t:100,thrust:382,current:24.5}]
           },
-          prop_ref:{'1s':'gemfan_3018','2s':'gemfan_2540'}
+          prop_ref:{
+            '1s':{model:'Gemfan 3016 3-blade', diameter_in:3.0, pitch_in:1.6, blades:3, source:'datasheet'},
+            '2s':{id:'gemfan_2540', source:'datasheet'}
+          }
         },
         {
           kv:8000, target:'2S – 3S', max_current_a:22.5, max_power_w:250, ir_mohm:145,
           bench:{
             '2s':[{t:50,thrust:112,current:3.2},{t:100,thrust:298,current:14.8}]
           },
-          prop_ref:{'2s':'gemfan_2520'}
+          prop_ref:{'2s':{id:'gemfan_2520', source:'datasheet'}}
         },
         {
           kv:6000, target:'2S – 4S', max_current_a:16.9, max_power_w:250, ir_mohm:166,
           bench:{
             '2s':[{t:50,thrust:94,current:2.1},{t:100,thrust:245,current:10.2}]
           },
-          prop_ref:{'2s':'gemfan_3018'}
+          prop_ref:{'2s':{id:'gemfan_3018', source:'datasheet'}}
         }
       ]
     },
@@ -485,7 +513,7 @@ const DB = {
           bench:{
             '2s':[{t:50,thrust:95,current:2.2},{t:100,thrust:248,current:10.5}]
           },
-          prop_ref:{'2s':'gemfan_3018'}
+          prop_ref:{'2s':{id:'gemfan_3018', source:'datasheet'}}
         }
       ]
     },
@@ -505,7 +533,7 @@ const DB = {
               {t:100,thrust:312,current:13.0}
             ]
           },
-          prop_ref:{'2s':'gemfan_3525'}
+          prop_ref:{'2s':{model:'3.5×2 prop (3-blade assumed)', diameter_in:3.5, pitch_in:2.0, blades:3, source:'datasheet'}}
         }
       ]
     },
@@ -515,9 +543,10 @@ const DB = {
       url:'https://amaxshop.com/index.php?route=product/product&product_id=1808',
       configs:[
         {
-          kv:8000, target:'2S LiPo', max_current_a:14.0, max_power_w:158, ir_mohm:null,
+          kv:8000, target:'2S LiPo (bench at 3S)', max_current_a:14.0, max_power_w:158, ir_mohm:null,
           bench:{
-            '2s':[
+            // Datasheet says 2S, but power ÷ current ≈ 11.3 V: this data was measured at 3S.
+            '3s':[
               {t:30,thrust:108,current:2.5},
               {t:50,thrust:162,current:4.5},
               {t:70,thrust:240,current:8.0},
@@ -525,12 +554,13 @@ const DB = {
               {t:100,thrust:346,current:14.0}
             ]
           },
-          prop_ref:{'2s':'gemfan_3525'}
+          prop_ref:{'3s':{model:'3.5×2 prop (3-blade assumed)', diameter_in:3.5, pitch_in:2.0, blades:3, source:'datasheet'}}
         },
         {
-          kv:7000, target:'2S LiPo', max_current_a:14.0, max_power_w:158, ir_mohm:null,
+          kv:7000, target:'2S LiPo (bench at 3S)', max_current_a:14.0, max_power_w:158, ir_mohm:null,
           bench:{
-            '2s':[
+            // Datasheet says 2S, but power ÷ current ≈ 11.3 V: this data was measured at 3S.
+            '3s':[
               {t:30,thrust:96,current:2.0},
               {t:50,thrust:156,current:4.0},
               {t:70,thrust:240,current:7.0},
@@ -538,7 +568,7 @@ const DB = {
               {t:100,thrust:420,current:14.0}
             ]
           },
-          prop_ref:{'2s':'gemfan_3525'}
+          prop_ref:{'3s':{model:'4×2 prop (3-blade assumed)', diameter_in:4.0, pitch_in:2.0, blades:3, source:'datasheet'}}
         }
       ]
     },
@@ -552,14 +582,14 @@ const DB = {
           bench:{
             '2s':[{t:50,thrust:145,current:5.4},{t:100,thrust:380,current:18.2}]
           },
-          prop_ref:{'2s':'gemfan_3525'}
+          prop_ref:{'2s':{id:'gemfan_3525', source:'assumed'}}
         },
         {
           kv:5000, target:'2S – 3S', max_current_a:16.0, max_power_w:180, ir_mohm:72,
           bench:{
             '2s':[{t:50,thrust:115,current:3.9},{t:100,thrust:295,current:13.5}]
           },
-          prop_ref:{'2s':'gemfan_3525'}
+          prop_ref:{'2s':{id:'gemfan_3525', source:'assumed'}}
         }
       ]
     }
@@ -600,6 +630,11 @@ const DB = {
       id:'gemfan_3032', model:'Gemfan 3032 Hurricane',
       diameter_in:3.0, pitch_in:3.2, blades:3, weight_g:1.7, material:'PC',
       url:'https://www.gemfanhobby.com/3032-gemfan-pc-3-blade.html'
+    },
+    {
+      id:'gemfan_3052', model:'Gemfan 3052 Flash',
+      diameter_in:3.0, pitch_in:5.2, blades:3, weight_g:1.65, material:'PC',
+      url:'https://www.gemfanhobby.com/3052-flash-pc-3-blade.html'
     },
     {
       id:'gemfan_3525', model:'Gemfan 3525 Hurricane T-Mount',
@@ -670,9 +705,29 @@ function fmt(value, maxDecimals = 2) {
   return n.toLocaleString(undefined, {maximumFractionDigits:maxDecimals});
 }
 
-function propTorqueScore(prop) {
-  // Aerodynamic torque ∝ D^5 × pitch × blades (D in inches)
-  return Math.pow(prop.diameter_in, 5) * prop.pitch_in * prop.blades;
+// Motor bench tests in DataSheets/ are run at 3.7 V per cell.
+const BENCH_V_PER_CELL = 3.7;
+// Winding resistance used when a datasheet does not list one (typical 13xx micro motor).
+const DEFAULT_IR_MOHM = 150;
+// Share of rated capacity used before landing (protects the cell, allows for sag).
+const USABLE_CAPACITY = 0.8;
+// Efficiency of the FC regulator feeding add-on decks.
+const REGULATOR_EFF = 0.85;
+const WEIGHT_LIMIT_G = 250;
+
+function cellCount(cellKey) {
+  return parseInt(cellKey, 10);
+}
+
+// Prop load (torque/power coefficient), Abbott rule: Q ∝ D⁴ · pitch · n², with a
+// √blades factor for extra blades. Used to judge prop-to-motor matching.
+function propLoad(prop) {
+  return Math.pow(prop.diameter_in, 4) * prop.pitch_in * Math.sqrt(prop.blades);
+}
+
+// Static-thrust coefficient, same rule of thumb: T ∝ D³ · pitch · n².
+function propThrustCoef(prop) {
+  return Math.pow(prop.diameter_in, 3) * prop.pitch_in * Math.sqrt(prop.blades);
 }
 
 function getActiveMotorConfig() {
@@ -710,34 +765,96 @@ function groupBy(items, keyFn) {
   }, {});
 }
 
+// Reference (bench-test) prop for a motor config at a voltage. prop_ref entries are either
+// {id} pointing at DB.props, or explicit geometry for a prop that is not in the DB.
+// source: 'datasheet' when the datasheet names the test prop, 'assumed' otherwise.
+function getRefProp(motorConfig, cellKey) {
+  const ref = motorConfig?.prop_ref?.[cellKey];
+  if (!ref) return null;
+  const prop = ref.id ? DB.props.find(p => p.id === ref.id) : ref;
+  if (!prop) return null;
+  return {prop, id:ref.id || null, source:ref.source, name:ref.id ? prop.model : ref.model};
+}
+
+function isRefProp(ref, prop) {
+  if (!ref || !prop) return false;
+  if (ref.id) return ref.id === prop.id;
+  return ref.prop.diameter_in === prop.diameter_in &&
+         ref.prop.pitch_in === prop.pitch_in &&
+         ref.prop.blades === prop.blades;
+}
+
 function getPropStatus(motorConfig, cellKey, prop) {
   if (!motorConfig || !motorConfig.prop_ref) return {status:'unknown',label:'—',msg:'Select a motor first'};
 
-  const refId = motorConfig.prop_ref[cellKey];
+  const ref = getRefProp(motorConfig, cellKey);
+  if (!ref) return {status:'unknown',label:'No ref data',msg:'No reference prop data for this motor/voltage'};
 
-  if (!refId) {
-    if (cellKey === '2s' && motorConfig.kv >= 11500) {
-      return {status:'over',label:'Over-propped',msg:'Motor RPM too high at 2S — available props too large; a smaller prop (e.g. 2020 3-blade) is needed'};
+  if (isRefProp(ref, prop)) {
+    return ref.source === 'datasheet'
+      ? {status:'optimal',label:'✓ Optimal',msg:'Matches the bench-test prop named in the motor datasheet'}
+      : {status:'optimal',label:'✓ Reference',msg:'Matches the assumed reference prop (datasheet does not name its test prop)'};
+  }
+
+  const ratio = propLoad(prop) / propLoad(ref.prop);
+  const pct = `${(ratio*100).toFixed(0)}% of the load of the bench prop (${ref.name})`;
+
+  if (ratio < 0.5)   return {status:'under',label:'Under-propped',msg:`${pct} — motor over-revs, thrust well below bench data`};
+  if (ratio < 0.75)  return {status:'acceptable',label:'~ Acceptable',msg:`${pct} — slightly under-propped, less thrust`};
+  if (ratio <= 1.33) return {status:'optimal',label:'✓ Good Match',msg:`${pct} — good fit`};
+  if (ratio <= 2.0)  return {status:'acceptable',label:'~ Acceptable',msg:`${pct} — slightly over-propped, more current, monitor temps`};
+  return {status:'over',label:'Over-propped',msg:`${pct} — motor strains, excessive current, risk of overheating`};
+}
+
+// Battery current at a given thrust on the bench curve: linear between measured points
+// (from 0 g / 0 A), power-law extrapolation of the last segment above the curve.
+function currentAtThrust(bench, thrust) {
+  const pts = [{thrust:0,current:0}, ...bench];
+  for (let i = 1; i < pts.length; i++) {
+    if (thrust <= pts[i].thrust) {
+      const f = (thrust - pts[i-1].thrust) / (pts[i].thrust - pts[i-1].thrust);
+      return pts[i-1].current + f * (pts[i].current - pts[i-1].current);
     }
-    return {status:'unknown',label:'No ref data',msg:'No reference prop data for this motor/voltage'};
+  }
+  const p1 = pts[pts.length - 2], p2 = pts[pts.length - 1];
+  const m = p1.thrust > 0 ? Math.log(p2.current / p1.current) / Math.log(p2.thrust / p1.thrust) : 1;
+  return p2.current * Math.pow(thrust / p2.thrust, m);
+}
+
+// Thrust/current-vs-throttle curve for the selected prop.
+// With the bench prop (or none selected) this is the datasheet curve unchanged. With a
+// different prop the curve is scaled:
+//  · full throttle: DC motor model ω = KV·(V − I·R) balanced against prop torque
+//    I ∝ load·ω², calibrated on the bench 100% point → RPM ratio x;
+//    thrust scales by thrustCoef ratio · x², full-throttle current by load ratio · x².
+//  · current at a given thrust scales by D_ref / D (momentum theory, P ∝ T^1.5 / D).
+function performanceCurve(motorConfig, cellKey, prop) {
+  const bench = motorConfig.bench[cellKey];
+  if (!bench) return null;
+  const full = bench[bench.length - 1];
+  const ref = getRefProp(motorConfig, cellKey);
+  if (!prop || !ref || isRefProp(ref, prop)) {
+    return {points:bench, fullCurrent:full.current, scaled:false, ref};
   }
 
-  const refProp = DB.props.find(p => p.id === refId);
-  if (!refProp) return {status:'unknown',label:'No ref',msg:''};
+  const loadRatio = propLoad(prop) / propLoad(ref.prop);
+  const thrustRatio = propThrustCoef(prop) / propThrustCoef(ref.prop);
+  const V = BENCH_V_PER_CELL * cellCount(cellKey);
+  const R = (motorConfig.ir_mohm ?? DEFAULT_IR_MOHM) / 1000;
+  const emf = Math.max(V - full.current * R, 0.1 * V);
+  // loadRatio·I_ref·R·x² + emf·x − V = 0
+  const a = loadRatio * full.current * R;
+  const rpmRatio = (-emf + Math.sqrt(emf * emf + 4 * a * V)) / (2 * a);
+  const thrustScale = thrustRatio * rpmRatio * rpmRatio;
+  const diameterRatio = ref.prop.diameter_in / prop.diameter_in;
 
-  if (prop.id === refId) {
-    return {status:'optimal',label:'✓ Optimal',msg:`Matches bench-test prop · confirmed by manufacturer data`};
-  }
-
-  const score = propTorqueScore(prop);
-  const refScore = propTorqueScore(refProp);
-  const ratio = score / refScore;
-
-  if (ratio < 0.45) return {status:'under',label:'Under-propped',msg:`${(ratio*100).toFixed(0)}% of optimal load — motor over-revs, high bearing wear, poor efficiency`};
-  if (ratio < 0.72) return {status:'acceptable',label:'~ Acceptable',msg:`${(ratio*100).toFixed(0)}% of optimal — slightly under-propped, minor efficiency loss`};
-  if (ratio <= 1.40) return {status:'optimal',label:'✓ Good Match',msg:`${(ratio*100).toFixed(0)}% of optimal aerodynamic load — good fit`};
-  if (ratio <= 1.80) return {status:'acceptable',label:'~ Acceptable',msg:`${(ratio*100).toFixed(0)}% of optimal — slightly over-propped, monitor temps`};
-  return {status:'over',label:'Over-propped',msg:`${(ratio*100).toFixed(0)}% of optimal load — motor strains, excessive current, risk of overheating`};
+  const points = bench.map(pt => {
+    const thrust = pt.thrust * thrustScale;
+    return {t:pt.t, thrust, current:diameterRatio * currentAtThrust(bench, thrust)};
+  });
+  // Take the higher of the two full-throttle estimates for limit checks.
+  const fullCurrent = Math.max(points[points.length - 1].current, loadRatio * rpmRatio * rpmRatio * full.current);
+  return {points, fullCurrent, scaled:true, ref, rpmRatio, thrustScale};
 }
 
 function interpolateHover(bench, thrustPerMotor) {
@@ -755,8 +872,19 @@ function interpolateHover(bench, thrustPerMotor) {
   return {throttle:100, current:pts[pts.length-1].current, overloaded:true};
 }
 
-function selectedAddons() {
-  return (DB.addons || []).filter(addon => state.addonIds.includes(addon.id));
+function protocolsCompatible(esc, fc) {
+  const norm = p => p.toLowerCase().replace(/[^a-z0-9]/g, '').replace(/\d+hz$/, '');
+  const escSet = new Set(esc.protocols.map(norm));
+  return fc.protocols.some(p => escSet.has(norm(p)));
+}
+
+function selectedAddons(cfg = state) {
+  return (DB.addons || []).filter(addon => cfg.addonIds.includes(addon.id));
+}
+
+function weightInput(value) {
+  const n = parseFloat(value);
+  return Number.isFinite(n) && n > 0 ? n : 0;
 }
 
 function escapeHtml(value) {
@@ -828,22 +956,23 @@ function exportBom() {
 // ═══════════════════════════════════════════════════
 //  CALCULATIONS
 // ═══════════════════════════════════════════════════
-function calcResults() {
-  if (!state.battery || !state.motorId || state.motorKv == null) return null;
+function calcResults(cfg = state) {
+  if (!cfg.battery || !cfg.motorId || cfg.motorKv == null) return null;
 
-  const battery = DB.batteries.find(b => b.id === state.battery);
-  const motorData = DB.motors.find(m => m.id === state.motorId);
-  const mCfg = motorData.configs.find(c => c.kv === state.motorKv);
-  const prop = state.prop ? DB.props.find(p => p.id === state.prop) : null;
-  const esc  = state.esc  ? DB.escs.find(e => e.id === state.esc)   : null;
+  const battery = DB.batteries.find(b => b.id === cfg.battery);
+  const motorData = DB.motors.find(m => m.id === cfg.motorId);
+  const mCfg = motorData.configs.find(c => c.kv === cfg.motorKv);
+  const prop = cfg.prop ? DB.props.find(p => p.id === cfg.prop) : null;
+  const esc  = cfg.esc  ? DB.escs.find(e => e.id === cfg.esc)   : null;
   const fc   = DB.fc;
-  const addons = selectedAddons();
+  const addons = selectedAddons(cfg);
   const ck   = battery.cell_key;
-  const bench = mCfg.bench[ck];
+  const curve = performanceCurve(mCfg, ck, prop);
 
-  if (!bench) {
+  if (!curve) {
     return {error:`No bench data for ${motorData.model} ${mCfg.kv}KV at ${ck.toUpperCase()} — motor not tested at this voltage`};
   }
+  const bench = curve.points;
 
   // ── Weights ──
   const wMotor   = motorData.weight_g * 4;
@@ -852,35 +981,39 @@ function calcResults() {
   const wFc      = fc.weight_g;
   const wAddons  = addons.reduce((sum, addon) => sum + addon.weight_g, 0);
   const wBatt    = battery.weight_g;
-  const wFrame   = parseFloat(state.frameWeight)  || 0;
-  const wPayload = parseFloat(state.userPayload)   || 0;
+  const wFrame   = weightInput(cfg.frameWeight);
+  const wPayload = weightInput(cfg.userPayload);
   const total    = wMotor + wProp + wEsc + wFc + wAddons + wBatt + wFrame + wPayload;
 
   // ── Hover ──
   const thrustPerMotor = total / 4;
   const hov = interpolateHover(bench, thrustPerMotor);
-  const addonCurrent = addons.reduce((sum, addon) => sum + addon.current_draw_a, 0);
-  const totalHoverCurrent = hov.current * 4 + fc.current_draw_a + addonCurrent;
+  // Add-on decks run from the FC regulator: convert their power to battery-side current.
+  const addonCurrent = addons.reduce((sum, addon) =>
+    sum + addon.current_draw_a * addon.voltage_v / (battery.voltage_v * REGULATOR_EFF), 0);
+  const baseCurrent = fc.current_draw_a + addonCurrent;
+  const totalHoverCurrent = hov.current * 4 + baseCurrent;
   const pidHeadroom = Math.max(0, 100 - hov.throttle);
 
-  // ── Max thrust / TWR ──
+  // ── Max thrust / TWR (last bench point is 100% throttle) ──
   const maxThrust = bench[bench.length - 1].thrust * 4;
   const twr = maxThrust / total;
+  const fullCurrent = curve.fullCurrent;
 
   // ── Flight time (min) ──
-  // time_min = capacity_mAh × 0.8 × 60 / (current_A × 1000)
-  const flightTime = (battery.capacity_mah * 0.8 * 60) / (totalHoverCurrent * 1000);
+  // time_min = capacity_mAh × usable fraction × 60 / (current_A × 1000)
+  const flightTime = (battery.capacity_mah * USABLE_CAPACITY * 60) / (totalHoverCurrent * 1000);
 
   // ── Warnings ──
   const warnings = [];
 
-  if (total > 250)
-    warnings.push({lvl:'err', text:`Total weight ${fmt(total)} g exceeds the 250 g sub-250 limit`});
-  else if (total > 242)
-    warnings.push({lvl:'warn', text:`Weight ${fmt(total)} g — dangerously close to 250 g limit`});
+  if (total > WEIGHT_LIMIT_G)
+    warnings.push({lvl:'err', text:`Total weight ${fmt(total)} g exceeds the ${WEIGHT_LIMIT_G} g sub-250 limit`});
+  else if (total > WEIGHT_LIMIT_G - 8)
+    warnings.push({lvl:'warn', text:`Weight ${fmt(total)} g — dangerously close to ${WEIGHT_LIMIT_G} g limit`});
 
   if (hov.overloaded)
-    warnings.push({lvl:'err', text:`Insufficient thrust: 4 motors max = ${fmt(maxThrust)} g < ${fmt(total)} g required — cannot hover`});
+    warnings.push({lvl:'err', text:`Insufficient thrust: 4 motors max = ${fmt(maxThrust, 0)} g < ${fmt(total)} g required — cannot hover`});
 
   if (!hov.overloaded) {
     if (hov.throttle > 70)
@@ -889,23 +1022,30 @@ function calcResults() {
       warnings.push({lvl:'warn', text:`Hover at ${hov.throttle.toFixed(0)}% throttle — limited PID authority (${pidHeadroom.toFixed(0)}% headroom)`});
   }
 
+  if (fullCurrent > mCfg.max_current_a)
+    warnings.push({lvl:'err', text:`Full-throttle draw ${fmt(fullCurrent, 1)} A/motor exceeds motor rating ${fmt(mCfg.max_current_a)} A — motor will overheat`});
+
   if (esc) {
     if (battery.cells > esc.voltage_max_s)
       warnings.push({lvl:'err', text:`Battery ${battery.cells}S exceeds ESC max ${esc.voltage_max_s}S — ESC will be destroyed`});
-    const peakPerMotor = bench[bench.length - 1].current;
-    if (peakPerMotor > esc.peak_a)
-      warnings.push({lvl:'err', text:`Motor peak ${fmt(peakPerMotor)} A > ESC peak ${fmt(esc.peak_a)} A — ESC will burn at full throttle`});
-    else if (peakPerMotor > esc.continuous_a)
-      warnings.push({lvl:'warn', text:`Motor max ${fmt(peakPerMotor)} A exceeds ESC continuous ${fmt(esc.continuous_a)} A — avoid sustained full throttle`});
+    if (fullCurrent > esc.peak_a)
+      warnings.push({lvl:'err', text:`Motor peak ${fmt(fullCurrent, 1)} A > ESC peak ${fmt(esc.peak_a)} A — ESC will burn at full throttle`});
+    else if (fullCurrent > esc.continuous_a)
+      warnings.push({lvl:'warn', text:`Motor max ${fmt(fullCurrent, 1)} A exceeds ESC continuous ${fmt(esc.continuous_a)} A — avoid sustained full throttle`});
     if (!hov.overloaded && hov.current > esc.continuous_a * 0.88)
       warnings.push({lvl:'warn', text:`Hover current ${fmt(hov.current)} A/motor near ESC continuous limit (${fmt(esc.continuous_a)} A)`});
+    if (!protocolsCompatible(esc, fc))
+      warnings.push({lvl:'err', text:`${esc.model} shares no signal protocol with the ${fc.model} (${fc.protocols.join(', ')})`});
   }
 
-  const maxSysCurrent = bench[bench.length - 1].current * 4;
+  if (fullCurrent > fc.onboard_max_per_motor_a)
+    warnings.push({lvl:'warn', text:`Motor peak ${fmt(fullCurrent, 1)} A > ${fc.model} onboard ${fmt(fc.onboard_max_per_motor_a)} A/ch — wire ESC power directly to the battery`});
+
+  const maxSysCurrent = fullCurrent * 4 + baseCurrent;
   if (maxSysCurrent > battery.peak_a)
-    warnings.push({lvl:'err', text:`Peak motor draw ${fmt(maxSysCurrent)} A > battery peak ${fmt(battery.peak_a)} A`});
+    warnings.push({lvl:'err', text:`Peak draw ${fmt(maxSysCurrent, 1)} A > battery peak ${fmt(battery.peak_a)} A`});
   else if (maxSysCurrent > battery.max_continuous_a)
-    warnings.push({lvl:'warn', text:`Peak motor draw ${fmt(maxSysCurrent)} A exceeds battery continuous ${fmt(battery.max_continuous_a)} A`});
+    warnings.push({lvl:'warn', text:`Peak draw ${fmt(maxSysCurrent, 1)} A exceeds battery continuous ${fmt(battery.max_continuous_a)} A`});
 
   if (prop) {
     const ps = getPropStatus(mCfg, ck, prop);
@@ -913,7 +1053,16 @@ function calcResults() {
       warnings.push({lvl:'err', text:`Over-propped: ${ps.msg}`});
     else if (ps.status === 'under')
       warnings.push({lvl:'warn', text:`Under-propped: ${ps.msg}`});
+    if (curve.scaled)
+      warnings.push({lvl:'info', text:`Performance scaled from bench data measured with ${curve.ref.name} — estimate only`});
+  } else {
+    warnings.push({lvl:'info', text:'No propeller selected — prop weight not included'});
   }
+  if (!esc)
+    warnings.push({lvl:'info', text:'No ESC selected — ESC weight and limits not checked'});
+
+  if (!hov.overloaded && thrustPerMotor < bench[0].thrust * 0.5)
+    warnings.push({lvl:'info', text:`Hover thrust ${fmt(thrustPerMotor, 0)} g/motor is far below the lowest bench point (${fmt(bench[0].thrust, 0)} g) — hover current extrapolated`});
 
   if (!hov.overloaded && pidHeadroom < 40 && pidHeadroom >= 30)
     warnings.push({lvl:'info', text:`PID headroom ${pidHeadroom.toFixed(0)}% — acceptable but aggressive manoeuvres will clip`});
@@ -921,10 +1070,29 @@ function calcResults() {
   return {
     total, wMotor, wProp, wEsc, wFc, wAddons, wBatt, wFrame, wPayload,
     thrustPerMotor, hoverThrottle: hov.throttle,
-    hoverCurrentPerMotor: hov.current, totalHoverCurrent,
-    pidHeadroom, maxThrust, twr, flightTime,
+    hoverCurrentPerMotor: hov.current, totalHoverCurrent, fullCurrent,
+    pidHeadroom, maxThrust, twr, flightTime, curve,
     warnings, overloaded: hov.overloaded, motorData, mCfg, battery
   };
+}
+
+// Performance of the current build over a range of payloads, and the largest payload that
+// still produces no errors.
+function payloadSweep(cfg = state, step = 10, maxRows = 16) {
+  const rows = [];
+  for (let payload = 0; rows.length < maxRows; payload += step) {
+    const R = calcResults({...cfg, userPayload:payload});
+    if (!R || R.error) return null;
+    rows.push({payload, R});
+    if (R.warnings.some(w => w.lvl === 'err')) break;
+  }
+  let maxPayload = null, limiter = null;
+  for (let payload = 0; payload <= WEIGHT_LIMIT_G; payload += 0.5) {
+    const errs = calcResults({...cfg, userPayload:payload}).warnings.filter(w => w.lvl === 'err');
+    if (errs.length) { limiter = errs[0].text; break; }
+    maxPayload = payload;
+  }
+  return {rows, maxPayload, limiter};
 }
 
 // ═══════════════════════════════════════════════════
@@ -936,7 +1104,8 @@ const STEPS = [
   {id:'s-prop',      num:3, label:'Propellers', sub:'Torque match'},
   {id:'s-esc',       num:4, label:'Drivers',    sub:'ESC selection'},
   {id:'s-fc',        num:5, label:'Electronics',sub:'Flight controller'},
-  {id:'s-build',     num:6, label:'Build Setup',sub:'Frame + payload'}
+  {id:'s-build',     num:6, label:'Build Setup',sub:'Frame + payload'},
+  {id:'s-model',     num:7, label:'Model',      sub:'Equations'}
 ];
 
 function isDone(stepId) {
@@ -946,13 +1115,13 @@ function isDone(stepId) {
   if (stepId === 's-esc')      return !!state.esc;
   if (stepId === 's-fc')       return true;
   if (stepId === 's-build')    return true;
+  if (stepId === 's-model')    return true;
   return false;
 }
 
 function renderSidebar() {
   document.getElementById('sidebar').innerHTML = STEPS.map(s => {
     const done   = isDone(s.id);
-    const active = document.querySelector('.section:is(:hover)'); // simple
     return `<a class="step-link${done?' done':''}" href="#${s.id}">
       <div class="snum">${done?'✓':s.num}</div>
       <div class="stext"><strong>${s.label}</strong><span>${s.sub}</span></div>
@@ -996,6 +1165,7 @@ function renderBattery() {
       <h2><div class="sec-num">1</div> Battery Selection</h2>
       <p>Choose the cell format and count. This determines voltage, capacity, and which motors are optimal.</p>
     </div>
+    <div class="hint-box">🔋 Voltages are datasheet nominal (3.6 V/cell); motor bench data was measured at 3.7 V/cell. On 1S, set the low-voltage cut-off to ≥ 3.0 V under load — the ${DB.fc.model} needs ${fmt(DB.fc.voltage_min_v)} V minimum.</div>
     ${batteryGroupHtml}
   </section>`;
 }
@@ -1008,8 +1178,8 @@ function renderMotors() {
 
   const hint = battery
     ? (battery.cell_key === '1s'
-        ? 'At 1S (3.7 V) high-KV motors (≥10 000 KV) are preferred — low-KV motors lack RPM at 1S voltage.'
-        : 'At 2S (7.4 V) medium-KV motors (5 000–8 000 KV) are preferred — high-KV motors spin too fast for available props.')
+        ? `At 1S (${fmt(battery.voltage_v)} V) high-KV motors (≥10 000 KV) are preferred — low-KV motors lack RPM at 1S voltage.`
+        : `At 2S (${fmt(battery.voltage_v)} V) medium-KV motors (5 000–8 000 KV) are preferred — high-KV motors spin too fast for available props.`)
     : 'Select a battery first to see KV recommendations.';
 
   const sortedMotors = [...DB.motors].sort((a, b) => {
@@ -1071,13 +1241,21 @@ function renderMotors() {
 // ═══════════════════════════════════════════════════
 //  RENDER — PROP STEP
 // ═══════════════════════════════════════════════════
+function torqueHint(mCfg, battery) {
+  const ref = getRefProp(mCfg, battery.cell_key);
+  const motor = DB.motors.find(m => m.id === state.motorId);
+  const refText = !ref ? 'No reference prop for this voltage.'
+    : `Bench data measured with <strong>${escapeHtml(ref.name)}</strong>${ref.source === 'assumed' ? ' (assumed — the datasheet does not name its test prop)' : ''}.`;
+  return `Torque matching for ${motor.model} ${state.motorKv} KV at ${battery.cell_key.toUpperCase()} (${fmt(battery.voltage_v)} V). ${refText}`;
+}
+
 function renderProps() {
   const battery = state.battery ? DB.batteries.find(b => b.id === state.battery) : null;
   const mCfg    = getActiveMotorConfig();
 
   const hint = !battery ? 'Select a battery to enable prop matching.' :
                !mCfg    ? 'Select a motor and KV variant to see torque matching.' :
-               `Torque matching for ${DB.motors.find(m=>m.id===state.motorId).model} ${state.motorKv} KV at ${battery.cell_key.toUpperCase()} (${fmt(battery.voltage_v)} V).`;
+               torqueHint(mCfg, battery);
 
   const propOrder = prop => {
     if (prop.id === 'gemfan_3018') return 0;
@@ -1133,12 +1311,12 @@ function renderProps() {
       if (ps.status === 'over') {
         torqueAlertHtml = `<div class="torque-alert alert-over">
           <span class="torque-icon">⚠</span>
-          <div><strong>Over-propped:</strong> ${escapeHtml(selProp.model)} exceeds this motor's optimal torque load at ${battery.cell_key.toUpperCase()}. ${escapeHtml(ps.msg)} — motor will draw excessive current and may overheat. Select a smaller or lower-pitch prop.</div>
+          <div><strong>Over-propped:</strong> ${escapeHtml(selProp.model)} exceeds this motor's optimal torque load at ${battery.cell_key.toUpperCase()}. ${escapeHtml(ps.msg)}. Select a smaller or lower-pitch prop.</div>
         </div>`;
       } else if (ps.status === 'under') {
         torqueAlertHtml = `<div class="torque-alert alert-under">
           <span class="torque-icon">ℹ</span>
-          <div><strong>Under-propped:</strong> ${escapeHtml(selProp.model)} under-loads this motor at ${battery.cell_key.toUpperCase()}. ${escapeHtml(ps.msg)} — select a larger or higher-pitch prop for better efficiency.</div>
+          <div><strong>Under-propped:</strong> ${escapeHtml(selProp.model)} under-loads this motor at ${battery.cell_key.toUpperCase()}. ${escapeHtml(ps.msg)}. Select a larger or higher-pitch prop for better efficiency.</div>
         </div>`;
       }
     }
@@ -1147,7 +1325,7 @@ function renderProps() {
   return `<section class="section" id="s-prop">
     <div class="sec-header">
       <h2><div class="sec-num">3</div> Propeller Selection</h2>
-      <p>Prop torque demand is scored as D⁵ × pitch × blades relative to bench-tested reference prop.</p>
+      <p>Prop load is scored as D⁴ × pitch × √blades relative to the prop the motor was bench-tested with. Other props scale the bench curve (see <a href="#s-model">Model &amp; Equations</a>).</p>
     </div>
     <div class="hint-box">🌀 ${hint}</div>
     ${torqueAlertHtml}
@@ -1161,22 +1339,24 @@ function renderProps() {
 function renderEsc() {
   const battery = state.battery ? DB.batteries.find(b => b.id === state.battery) : null;
   const mCfg = getActiveMotorConfig();
+  const prop = state.prop ? DB.props.find(p => p.id === state.prop) : null;
+  const curve = mCfg && battery ? performanceCurve(mCfg, battery.cell_key, prop) : null;
+  const peak = curve ? curve.fullCurrent : null;
 
   const escCards = DB.escs.map(esc => {
     const voltOk  = !battery || battery.cells <= esc.voltage_max_s;
-    const peakOk  = !mCfg   || mCfg.bench[battery?.cell_key]?.at(-1)?.current <= esc.peak_a;
-    const contOk  = !mCfg   || mCfg.bench[battery?.cell_key]?.at(-1)?.current <= esc.continuous_a;
+    const protoOk = protocolsCompatible(esc, DB.fc);
 
     let compat = '';
     if (battery && !voltOk)
       compat = `<span class="prop-badge prop-over">⚠ Voltage too high for ${battery.cells}S</span>`;
-    else if (mCfg && battery && !peakOk) {
-      const benchPeak = mCfg.bench[battery.cell_key]?.at(-1)?.current;
-      compat = `<span class="prop-badge prop-over">⚠ Motor peak ${fmt(benchPeak)}A > ESC peak ${fmt(esc.peak_a)}A</span>`;
-    } else if (mCfg && battery && !contOk) {
-      const benchPeak = mCfg.bench[battery.cell_key]?.at(-1)?.current;
-      compat = `<span class="prop-badge prop-acceptable">⚠ Motor max ${fmt(benchPeak)}A > cont. ${fmt(esc.continuous_a)}A</span>`;
-    } else if (battery || mCfg) {
+    else if (!protoOk)
+      compat = `<span class="prop-badge prop-over">⚠ No protocol shared with ${DB.fc.model}</span>`;
+    else if (peak != null && peak > esc.peak_a)
+      compat = `<span class="prop-badge prop-over">⚠ Motor peak ${fmt(peak, 1)}A > ESC peak ${fmt(esc.peak_a)}A</span>`;
+    else if (peak != null && peak > esc.continuous_a)
+      compat = `<span class="prop-badge prop-acceptable">⚠ Motor max ${fmt(peak, 1)}A > cont. ${fmt(esc.continuous_a)}A</span>`;
+    else if (battery || mCfg) {
       compat = `<span class="prop-badge prop-optimal">✓ Compatible</span>`;
     }
 
@@ -1268,17 +1448,91 @@ function renderBuild() {
     </div>
     <div class="input-row">
       <div class="input-grp">
-        <label>Frame Weight (g)</label>
-        <input type="number" id="frameWt" value="${state.frameWeight}" min="0" max="200" step="0.5"
-               oninput="state.frameWeight=this.value;updateResults()">
+        <label for="frameWt">Frame Weight (g)</label>
+        <input type="number" id="frameWt" value="${state.frameWeight}" min="0" max="200" step="0.5">
         <div class="input-unit">Typical 2.5" frame: 12–18 g · 3" frame: 18–30 g</div>
       </div>
       <div class="input-grp">
-        <label>User Payload (g)</label>
-        <input type="number" id="payloadWt" value="${state.userPayload}" min="0" max="200" step="0.5"
-               oninput="state.userPayload=this.value;updateResults()">
+        <label for="payloadWt">User Payload (g)</label>
+        <input type="number" id="payloadWt" value="${state.userPayload}" min="0" max="200" step="0.5">
         <div class="input-unit">Camera, sensors, extra hardware, etc.</div>
       </div>
+    </div>
+    <div id="sweep"></div>
+  </section>`;
+}
+
+function renderSweep() {
+  const el = document.getElementById('sweep');
+  if (!el) return;
+  const sweep = payloadSweep();
+  if (!sweep) {
+    el.innerHTML = `<div class="sweep-summary" style="color:var(--dim)">Select a battery and a motor with bench data to see how performance changes with payload.</div>`;
+    return;
+  }
+  const current = weightInput(state.userPayload);
+  const summary = sweep.maxPayload == null
+    ? `<span class="sweep-err">No payload possible — fix the errors first:</span> ${escapeHtml(sweep.limiter)}`
+    : `Max payload with no errors: <strong>${fmt(sweep.maxPayload)} g</strong>` +
+      (sweep.limiter ? ` · limited by: ${escapeHtml(sweep.limiter)}` : '');
+  const rows = sweep.rows.map(({payload, R}) => {
+    const errs = R.warnings.filter(w => w.lvl === 'err');
+    const warns = R.warnings.filter(w => w.lvl === 'warn');
+    const more = n => n > 0 ? ` <span style="color:var(--dim)">(+${n} more)</span>` : '';
+    const status = errs.length ? `<span class="sweep-err">✕ ${escapeHtml(errs[0].text)}</span>${more(errs.length + warns.length - 1)}`
+                 : warns.length ? `<span class="sweep-warn">⚠ ${escapeHtml(warns[0].text)}</span>${more(warns.length - 1)}`
+                 : `<span class="sweep-ok">✓ OK</span>`;
+    const isCurrent = current >= payload && current < payload + 10;
+    return `<tr class="${isCurrent ? 'current' : ''}">
+      <td>${fmt(payload)} g</td>
+      <td>${fmt(R.total, 1)} g</td>
+      <td>${R.overloaded ? '—' : R.hoverThrottle.toFixed(0) + '%'}</td>
+      <td>${fmt(R.twr)}×</td>
+      <td>${R.overloaded ? '—' : fmt(R.totalHoverCurrent) + ' A'}</td>
+      <td>${R.overloaded ? '—' : fmt(R.flightTime, 1) + ' min'}</td>
+      <td>${status}</td>
+    </tr>`;
+  }).join('');
+  el.innerHTML = `<div class="sweep-summary">${summary}</div>
+    <div class="sweep-wrap"><table class="sweep-table">
+      <thead><tr><th>Payload</th><th>Total</th><th>Hover</th><th>T/W</th><th>Hover current</th><th>Flight time</th><th>Status</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER — MODEL & EQUATIONS
+// ═══════════════════════════════════════════════════
+function renderModel() {
+  return `<section class="section" id="s-model">
+    <div class="sec-header">
+      <h2><div class="sec-num">7</div> Model &amp; Equations</h2>
+      <p>How the estimates in the results panel are computed. All figures are first-order estimates to compare against lab measurements.</p>
+    </div>
+    <div class="model-box">
+      <h3>Weight &amp; hover</h3>
+      <ul>
+        <li><code>W = battery + 4·(motor + prop + ESC) + FC + add-ons + frame + payload</code>, limit ${WEIGHT_LIMIT_G} g.</li>
+        <li>Hover thrust per motor <code>T_h = W / 4</code>. Hover throttle and current are interpolated linearly on the motor's bench curve (thrust, current vs throttle), starting from 0 g / 0 A.</li>
+        <li>PID headroom <code>= 100% − hover throttle</code>; &gt; 60% hover is a warning, &gt; 70% an error. <code>T/W = 4·T_max / W</code>.</li>
+      </ul>
+      <h3>Current &amp; flight time</h3>
+      <ul>
+        <li><code>I_hover = 4·I_motor(T_h) + I_FC + Σ I_deck·V_deck / (V_batt·${REGULATOR_EFF})</code></li>
+        <li><code>t [min] = capacity_mAh · ${USABLE_CAPACITY} · 60 / (I_hover · 1000)</code> — ${USABLE_CAPACITY*100}% of rated capacity is treated as usable.</li>
+        <li>Full-throttle current per motor is checked against the motor rating, ESC continuous/peak, the ${DB.fc.model} ${fmt(DB.fc.onboard_max_per_motor_a)} A/ch onboard limit, and <code>4·I_max + I_FC</code> against the battery.</li>
+      </ul>
+      <h3>Propeller matching</h3>
+      <ul>
+        <li>Prop load (Abbott power rule) <code>K_Q ∝ D⁴·P·√B</code>; thrust coefficient <code>K_T ∝ D³·P·√B</code> (D, P in inches, B blades). The load ratio against the bench prop gives the badge: &lt; 50% under-propped, 50–75% / 133–200% acceptable, 75–133% good, &gt; 200% over-propped.</li>
+        <li>With a different prop the bench curve is scaled. At full throttle a DC motor model <code>ω = KV·(V − I·R)</code> is balanced against prop torque <code>I ∝ K_Q·ω²</code>, calibrated on the bench 100% point, giving the RPM ratio <code>x</code>: <code>T_max' = T_max·(K_T'/K_T)·x²</code>, <code>I_max' = I_max·(K_Q'/K_Q)·x²</code>. R is the datasheet winding resistance (${DEFAULT_IR_MOHM} mΩ if not listed).</li>
+        <li>Current at equal thrust scales with <code>D_ref / D</code> (momentum theory: induced power <code>P = T^1.5 / √(2ρA)</code>).</li>
+      </ul>
+      <h3>Limits of the data</h3>
+      <ul>
+        <li>Bench data is from manufacturer datasheets at 3.7 V/cell, fresh battery, no frame blockage. Real hover current is usually higher.</li>
+        <li>A motor is only offered at a cell count it was tested at. The AMAXInno 1304 sheet is labelled 2S, but its power ÷ current is ≈ 11.3 V, so its data is filed as 3S and it is not offered on the 2S packs.</li>
+      </ul>
     </div>
   </section>`;
 }
@@ -1309,9 +1563,9 @@ function renderResults() {
   }
 
   // Weight colour
-  const wPct = R.total / 250 * 100;
-  const wColour = R.total > 250 ? 'err' : R.total > 242 ? 'warn' : 'ok';
-  const wBarColor = R.total > 250 ? 'var(--err)' : R.total > 242 ? 'var(--warn)' : 'var(--ok)';
+  const wPct = R.total / WEIGHT_LIMIT_G * 100;
+  const wColour = R.total > WEIGHT_LIMIT_G ? 'err' : R.total > WEIGHT_LIMIT_G - 8 ? 'warn' : 'ok';
+  const wBarColor = R.total > WEIGHT_LIMIT_G ? 'var(--err)' : R.total > WEIGHT_LIMIT_G - 8 ? 'var(--warn)' : 'var(--ok)';
 
   // Throttle colour
   const tColour = R.overloaded ? 'err' : R.hoverThrottle > 70 ? 'err' : R.hoverThrottle > 60 ? 'warn' : 'ok';
@@ -1332,7 +1586,6 @@ function renderResults() {
       }).join('');
 
   // Weight breakdown
-  const hasAll = state.esc && state.prop;
   const wbRows = [
     ['Battery', R.wBatt],
     ['Motors ×4', R.wMotor],
@@ -1347,14 +1600,14 @@ function renderResults() {
   const wbHtml = wbRows.map(([l,v]) =>
     `<div class="wb-row"><span class="wb-label">${l}</span><span class="wb-val">${fmt(v)} g</span></div>`
   ).join('') + `<hr class="wb-divider">
-  <div class="wb-row wb-total"><span class="wb-label">Total</span><span class="wb-val">${fmt(R.total)} g / 250 g</span></div>`;
+  <div class="wb-row wb-total"><span class="wb-label">Total</span><span class="wb-val">${fmt(R.total)} g / ${WEIGHT_LIMIT_G} g</span></div>`;
 
   el.innerHTML = `
     <div class="res-row">
       <div class="res-metric">
         <div class="res-label">Total Weight</div>
         <div class="res-value ${wColour}">${fmt(R.total)}<span style="font-size:.85rem;font-weight:500"> g</span></div>
-        <div class="res-sub">Limit: 250 g · ${fmt(250-R.total)} g remaining</div>
+        <div class="res-sub">Limit: ${WEIGHT_LIMIT_G} g · ${fmt(WEIGHT_LIMIT_G-R.total)} g remaining</div>
         <div class="res-bar"><div class="res-bar-fill" style="width:${Math.min(wPct,100)}%;background:${wBarColor}"></div></div>
       </div>
 
@@ -1373,14 +1626,14 @@ function renderResults() {
       <div class="res-metric">
         <div class="res-label">Thrust / Weight</div>
         <div class="res-value ${twrColour}">${fmt(R.twr)}×</div>
-        <div class="res-sub">Max thrust ${fmt(R.maxThrust)} g · hover needs ${fmt(R.total)} g</div>
+        <div class="res-sub">Max thrust ${fmt(R.maxThrust, 0)} g${R.curve.scaled ? ' (scaled)' : ''} · hover needs ${fmt(R.total)} g</div>
         <div class="res-bar"><div class="res-bar-fill" style="width:${Math.min(R.twr/5*100,100)}%;background:var(--accent2)"></div></div>
       </div>
 
       <div class="res-metric">
         <div class="res-label">Est. Hover Flight Time</div>
         <div class="res-value ${ftColour}">${R.overloaded ? '—' : fmt(R.flightTime)}<span style="font-size:.85rem;font-weight:500"> min</span></div>
-        <div class="res-sub">${R.battery.capacity_mah} mAh · ${fmt(R.totalHoverCurrent)} A total · 80% capacity used</div>
+        <div class="res-sub">${R.battery.capacity_mah} mAh · ${fmt(R.totalHoverCurrent)} A total · ${USABLE_CAPACITY*100}% capacity used</div>
         <div class="res-bar"><div class="res-bar-fill" style="width:${Math.min(R.flightTime/30*100,100)}%;background:var(--accent)"></div></div>
       </div>
 
@@ -1419,67 +1672,44 @@ function selectMotor(motorId, kv) {
 
 function selectProp(id) {
   state.prop = (state.prop === id) ? null : id;
-  updateResults();
-  renderSidebar();
-  // Just update prop step badges without full re-render
-  const propSection = document.getElementById('s-prop');
-  if (propSection) {
-    propSection.querySelectorAll('.card').forEach(card => {
-      const pid = card.getAttribute('onclick')?.match(/'(.*?)'/)?.[1];
-      if (pid) {
-        card.classList.toggle('selected', state.prop === pid);
-        const check = card.querySelector('.sel-check');
-        if (check) check.style.display = state.prop === pid ? 'flex' : 'none';
-      }
-    });
-  }
+  renderAll();
 }
 
 function selectEsc(id) {
   state.esc = (state.esc === id) ? null : id;
-  updateResults();
-  renderSidebar();
-  document.querySelectorAll('#s-esc .card').forEach(card => {
-    const eid = card.getAttribute('onclick')?.match(/'(.*?)'/)?.[1];
-    if (eid) {
-      card.classList.toggle('selected', state.esc === eid);
-      const check = card.querySelector('.sel-check');
-      if (check) check.style.display = state.esc === eid ? 'flex' : 'none';
-    }
-  });
+  renderAll();
 }
 
 function toggleAddon(id) {
   state.addonIds = state.addonIds.includes(id)
     ? state.addonIds.filter(addonId => addonId !== id)
     : [...state.addonIds, id];
-  updateResults();
-  renderSidebar();
-  document.querySelectorAll('#s-fc .fc-card.optional').forEach(card => {
-    const addonId = card.getAttribute('onclick')?.match(/'(.*?)'/)?.[1];
-    if (addonId) card.classList.toggle('selected', state.addonIds.includes(addonId));
-  });
+  renderAll();
 }
 
 function updateResults() {
   renderResults();
+  renderSweep();
 }
 
 function renderAll() {
   const main = document.getElementById('main');
+  const scroll = {main:main.scrollTop, page:window.scrollY};
   main.innerHTML = [
     renderBattery(),
     renderMotors(),
     renderProps(),
     renderEsc(),
     renderElectronics(),
-    renderBuild()
+    renderBuild(),
+    renderModel()
   ].join('<div class="divider"></div>');
+  main.scrollTop = scroll.main;
+  window.scrollTo(0, scroll.page);
 
   renderSidebar();
-  renderResults();
+  updateResults();
 
-  // Re-attach input listeners after rebuild
   const fw = document.getElementById('frameWt');
   const pw = document.getElementById('payloadWt');
   if (fw) fw.addEventListener('input', () => { state.frameWeight = fw.value; updateResults(); });
